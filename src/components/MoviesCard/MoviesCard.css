@@ -1,0 +1,108 @@
+.card {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  max-width: 360px;
+  position: relative;
+
+  margin: 0;
+  padding: 0;
+}
+
+.card__image {
+  cursor: pointer;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.card__info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 16px 14px 0;
+}
+
+.card__title {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 16px;
+  margin: 0;
+}
+
+.card__duration {
+  font-size: 11px;
+  line-height: 18px;
+  color: rgba(160, 160, 160, 1);
+  background-color: rgba(249, 249, 249, 1);
+  border-radius: 3px;
+  width: 52px;
+  height: 18px;
+  margin: 0;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.card__save-button {
+  position: absolute;
+  border: none;
+  background-color: rgba(249, 249, 249, 1);
+  border-radius: 30px;
+  font-size: 10px;
+  line-height: 9px;
+  padding: 6px 7px;
+  top: 10px;
+  right: 10px;
+  visibility: hidden;
+}
+
+.card__image:hover + .card__save-button {
+  cursor: pointer;
+  visibility: visible;
+}
+
+.card__save-button_checked {
+  cursor: pointer;
+  position: absolute;
+  border: none;
+  background-color: rgba(255, 48, 85, 1);
+  background-image: url(../../images/saveButton.svg);
+  object-fit: cover;
+  border-radius: 50px;
+  width: 21px;
+  height: 21px;
+  top: 10px;
+  right: 10px;
+}
+
+.card__save-button_delete {
+  cursor: pointer;
+  position: absolute;
+  border: none;
+  background-image: url(../../images/deleteButton.svg);
+  object-fit: cover;
+  border-radius: 50px;
+  width: 21px;
+  height: 21px;
+  top: 10px;
+  right: 10px;
+  visibility: hidden;
+}
+
+.card__image:hover + .card__save-button_delete {
+  cursor: pointer;
+  visibility: visible;
+}
+
+@media screen and (max-width: 650px) {
+  .card__info {
+    margin: 0;
+    margin-top: 16px;
+  }
+
+  .card__title {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}

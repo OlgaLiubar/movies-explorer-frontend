@@ -1,0 +1,152 @@
+.about-project {
+  display: flex;
+  flex-direction: column;
+  padding: 110px 70px;
+  box-sizing: border-box;
+}
+
+.about-project__articles {
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  padding: 0;
+  gap: 40px;
+  margin-bottom: 110px;
+}
+
+.about-project__title {
+  margin: 0;
+  font-weight: normal;
+  font-size: 22px;
+  line-height: 27px;
+  letter-spacing: -0.04em;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 1);
+  padding-bottom: 23px;
+}
+
+.about-project__subtitle {
+  margin: 70px 0 26px;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.04em;
+}
+
+.about-project__text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.about-project__timebar {
+  display: flex;
+  width: 100%;
+}
+
+.about-project__timebar-back {
+  width: 20%;
+}
+
+.about-project__timebar-front {
+  width: 80%;
+}
+
+.about-project__timebar-duration {
+  font-size: 14px;
+  line-height: 17px;
+
+  height: 36px;
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-project__timebar-duration_back-weeks {
+  background-color: rgba(43, 224, 128, 1);
+}
+
+.about-project__timebar-duration_front-weeks {
+  background-color: rgba(242, 242, 242, 1);
+}
+
+.about-project__timebar-caption {
+  color: rgba(160, 160, 160, 1);
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  margin: 0;
+  margin-top: 14px;
+}
+
+@media screen and (max-width: 862px) {
+  .about-project {
+    padding: 90px 50px;
+  }
+
+  .about-project__subtitle {
+    margin: 70px 0 22px;
+  }
+
+  .about-project__articles {
+    margin-bottom: 93px;
+  }
+
+  .about-project__text {
+    font-size: 12px;
+    line-height: 18px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .about-project {
+    padding: 70px 18px 70px;
+  }
+
+  .about-project__title {
+    font-size: 18px;
+    line-height: 22px;
+    padding-bottom: 28px;
+  }
+
+  .about-project__articles {
+    flex-direction: column;
+    padding: 60px 0;
+    gap: 56px;
+    margin: 0;
+  }
+
+  .about-project__subtitle {
+    margin: 0;
+    margin-bottom: 16px;
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .about-project__text {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .about-project__timebar-duration {
+    font-size: 11px;
+    line-height: 13px;
+  }
+
+  .about-project__timebar-back {
+    width: 35%;
+  }
+
+  .about-project__timebar-front {
+    width: 65%;
+  }
+
+  .about-project__timebar-caption {
+    font-size: 11px;
+    line-height: 13px;
+    margin-top: 10px;
+  }
+}

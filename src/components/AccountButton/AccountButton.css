@@ -1,0 +1,33 @@
+.account-btn {
+  width: 100px;
+  height: 32px;
+  padding-left: 11px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+
+  background-color: #ffffff;
+  box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.08);
+  border-radius: 40px;
+
+  color: rgba(0, 0, 0, 1);
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 12px;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+.account-btn__icon {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50px;
+  background-color: rgba(249, 249, 249, 1);
+  background-image: url(../../images/accountIcon.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-left: 7px;
+}
