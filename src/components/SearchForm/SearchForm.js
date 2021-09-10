@@ -1,7 +1,8 @@
 import React from "react";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
+import PropTypes from "prop-types";
 
-export default function SearchForm() {
+export default function SearchForm({handleSearchClick}) {
   return (
     <section className="search">
       <form action="#" className="search__form">
@@ -18,6 +19,7 @@ export default function SearchForm() {
             type="submit"
             value="Найти фильм"
             id="search__button"
+            onClick={handleSearchClick}
           />
         </div>
         <FilterCheckbox />
@@ -25,3 +27,7 @@ export default function SearchForm() {
     </section>
   );
 }
+
+SearchForm.propTypes = {
+  handleSearchClick: PropTypes.func,
+};
