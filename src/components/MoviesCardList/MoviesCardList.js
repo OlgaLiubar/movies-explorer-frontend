@@ -1,20 +1,17 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-const cards = [
-  { saved: false },
-  { saved: true },
-  { saved: true },
-  { saved: false },
-];
-
-export default function Movies() {
+export default function Movies({cards}) {
   return (
     <section className="moviesCardList">
       <ul className="moviesCardList__gallery">
-        {cards.map((i) => (
-          <MoviesCard key={[i]} card={i} />
+        {cards.map((card) => (
+          <MoviesCard 
+          key={card.id}
+          card={card}
+          />
         ))}
       </ul>
       <button type="button" className="moviesCardList__more-button">

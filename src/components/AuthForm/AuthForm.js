@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
@@ -9,15 +10,16 @@ export default function AuthForm({
   authQuestion,
   authLinkTxt,
   linkPath,
+  onChangeInput,
+  // errors,
+  isValid,
+  onSubmit,
 }) {
-  const errStyle = {
-    visibility: "hidden",
-  };
   return (
     <section className="auth">
       <div className="auth__logo"></div>
       <h1 className="auth__title">{`${title}`}</h1>
-      <form action="#" className="auth__form">
+      <form onSubmit={onSubmit} className="auth__form">
         <fieldset className="auth__fieldset">
           {signUp && (
             <label className="auth__label">
@@ -28,26 +30,25 @@ export default function AuthForm({
                 maxLength={30}
                 type="text"
                 name="name"
+                onChange={onChangeInput}
                 required
               />
-              <span
-                style={errStyle}
-                className="auth__input-error"
-                id="name-error"
-              >
-                Что-то пошло не так...
+              <span className="auth__input-error" id="name-error">
+                {/* {errors.name || ""} */}
               </span>
             </label>
           )}
           <label className="auth__label">
             <p className="auth__input-name">E-mail</p>
-            <input className="auth__input" type="email" name="email" required />
-            <span
-              style={errStyle}
-              className="auth__input-error"
-              id="email-error"
-            >
-              Что-то пошло не так...
+            <input
+              className="auth__input"
+              type="email"
+              name="email"
+              required
+              onChange={onChangeInput}
+            />
+            <span className="auth__input-error" id="email-error">
+              {/* {errors.email || ""} */}
             </span>
           </label>
           <label className="auth__label">
@@ -57,14 +58,20 @@ export default function AuthForm({
               maxLength={8}
               type="password"
               name="password"
+              onChange={onChangeInput}
               required
             />
             <span className="auth__input-error" id="password-error">
-              Что-то пошло не так...
+              {/* {errors.password || ""} */}
             </span>
           </label>
         </fieldset>
-        <button type="submit" value="Отправить" className={`auth__submit-btn`}>
+        <button
+          type="submit"
+          value="Отправить"
+          className={`auth__submit-btn`}
+          disabled={!isValid}
+        >
           {btnName}
         </button>
       </form>
