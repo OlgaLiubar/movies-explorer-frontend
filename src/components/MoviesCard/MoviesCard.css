@@ -2,6 +2,7 @@
   list-style: none;
   display: flex;
   flex-direction: column;
+  width: 100%;
   max-width: 360px;
   position: relative;
 
@@ -12,8 +13,11 @@
 .card__image {
   cursor: pointer;
   width: 100%;
+  max-width: 364px;
+  height: 201px;
   object-fit: cover;
   border-radius: 6px;
+  overflow: hidden;
 }
 
 .card__info {

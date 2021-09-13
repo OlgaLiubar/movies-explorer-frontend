@@ -11,6 +11,7 @@ import Profile from "../Profile/Profile";
 import Sidebar from "../Sidebar/Sidebar";
 import moviesApi from "../../utils/MoviesApi";
 import { auth } from "../../utils/auth";
+import {filterMovies} from "../../utils/functions";
 // import api from "../../utils/MainApi";
 
 function App() {
@@ -61,20 +62,29 @@ function App() {
       });
   }
 
-  const [cards, setCards] = React.useState([]);
+  //запись объекта карточек в local storage
+  const [foundMovies, setFoundMovies] = React.useState([]);
 
   React.useEffect(() => {
-    if (isLoggedIn) {
+    if (!localStorage.movies) {
       moviesApi
         .getMovies()
-        .then((cardData) => {
-          console.log(cardData);
-          setCards(cardData);
+        .then((moviesData) => {
+          // console.log(cardData);
+          localStorage.setItem("movies", JSON.stringify(moviesData));
         })
         .catch((err) => console.log(err))
         .finally(() => console.log("good job!"));
     }
   }, [isLoggedIn]);
+
+  function handleMovieSearch (query) {
+    const filteredMovies = filterMovies(
+      JSON.parse(localStorage.movies),
+      query
+    );
+    return setFoundMovies(filteredMovies);
+  }
 
   // const query = "Город";
 
@@ -96,7 +106,10 @@ function App() {
         </Route>
 
         <Route path="/movies">
-          <Movies handleBurgerClick={handleBurgerClick} cards={cards} />
+          <Movies 
+          findMovies={handleMovieSearch}
+          handleBurgerClick={handleBurgerClick} 
+          cards={foundMovies} />
         </Route>
 
         <Route path="/saved-movies">

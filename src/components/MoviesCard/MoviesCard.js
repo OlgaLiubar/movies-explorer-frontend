@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
+import { getTimeFromMins } from "../../utils/functions";
 // import cardImg from "../../images/cardImg.png";
 // import { useLocation } from "react-router-dom";
 
@@ -32,7 +33,7 @@ export default function MoviesCard({ card }) {
       </button> */}
       <div className="card__info">
         <h2 className="card__title">{card.nameRU}</h2>
-        <p className="card__duration">{card.duration}</p>
+        <p className="card__duration">{getTimeFromMins(card.duration)}</p>
       </div>
     </li>
   );
