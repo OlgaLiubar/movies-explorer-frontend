@@ -3,14 +3,14 @@ import React from "react";
 import { useFormWithValidation } from "../../hooks/useForm";
 import AuthForm from "../AuthForm/AuthForm";
 
-export default function Login({ onSubmit, isLoading }) {
+export default function Login({ onSubmit, isLoading, serverErrMsg }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
 
-  console.log(values)
+  // console.log(values)
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    console.log(values)
+    // console.log(values)
     onSubmit(values);
   }
   
@@ -27,6 +27,8 @@ export default function Login({ onSubmit, isLoading }) {
       errors={errors}
       isValid={isValid}
       isLoading={isLoading}
+      values={values}
+      serverErrMsg={serverErrMsg}
     />
   );
 }

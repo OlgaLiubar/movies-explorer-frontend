@@ -4,13 +4,16 @@ import PropTypes from "prop-types";
 import headerLogo from "../../images/headerLogo.svg";
 import NavLanding from "../NavLanding/NavLanding";
 import NavMovies from "../NavMovies/NavMovies";
+import { Link } from 'react-router-dom';
 
-export default function Header({ headerDark, isLoggedIn, handleBurgerClick }) {
+export default function Header({ headerDark, loggedIn, handleBurgerClick }) {
   return (
     <header className={`header ${headerDark || ""}`}>
+      <Link to="/">
       <img src={headerLogo} alt="Movie" className="header__logo" />
-      {!isLoggedIn ? (
-        <NavLanding />
+      </Link>
+      {!loggedIn ? (
+        <NavLanding/>
       ) : (
         <NavMovies handleBurgerClick={handleBurgerClick} />
       )}
@@ -20,6 +23,5 @@ export default function Header({ headerDark, isLoggedIn, handleBurgerClick }) {
 
 Header.propTypes = {
   headerDark: PropTypes.string,
-  isPromo: PropTypes.bool,
   handleBurgerClick: PropTypes.func,
 };

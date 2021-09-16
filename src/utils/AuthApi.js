@@ -8,13 +8,12 @@ class Auth {
         if (res.ok) {
             return res.json();
         }
+        console.log(res.json());
         return Promise.reject(`Error: ${res.status}`);
     }
 
     register(name, email, password) {
-        console.log(name);
-        console.log(email);
-        console.log(password);
+
         return fetch(`${this._baseUrl}/signup`, {
             method: 'POST',
             credentials: "include",
@@ -30,7 +29,7 @@ class Auth {
             .then(this._checkResponse)
     }
 
-    signIn(password, email) {
+    signIn({ email, password }) {
         return fetch(`${this._baseUrl}/signin`, {
             method: 'POST',
             credentials: "include",
@@ -42,23 +41,25 @@ class Auth {
         })
             .then(this._checkResponse)
             .then((data) => {
+                console.log("где токен")
+                console.log(data)
                 // сохраняем токен
                 localStorage.setItem('token', data.token);
                 return data;
             })
     }
 
-    // getContent(token) {
-    //     return fetch(`${this._baseUrl}/users/me`, {
-    //         method: 'GET',
-    //         credentials: "include",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             "Authorization": `Bearer ${token}`
-    //         }
-    //     })
-    //         .then(this._checkResponse)
-    // }
+    getContent(token) {
+        return fetch(`${this._baseUrl}/users/me`, {
+            method: 'GET',
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+            .then(this._checkResponse)
+    }
 }
 
 export const auth = new Auth();

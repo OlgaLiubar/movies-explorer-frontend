@@ -8,12 +8,13 @@ import Portfolio from "../Portfolio/Portfolio";
 import Promo from "../Promo/Promo";
 import Techs from "../Techs/Techs";
 
-export default function Main({isLoggedIn}) {
+export default function Main({loggedIn}) {
   return (
     <>
       <Header 
-      isLoggedIn={isLoggedIn} 
-      headerDark="header_dark"  
+      loggedIn={loggedIn} 
+      headerDark="header_dark"
+      isPromo="nav-landing__btn_promo"
       />
       <Promo />
       <AboutProject />

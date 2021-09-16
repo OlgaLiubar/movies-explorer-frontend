@@ -2,6 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import FormButton from "../FormButton/FormButton";
 
 export default function AuthForm({
   title,
@@ -11,13 +12,19 @@ export default function AuthForm({
   authLinkTxt,
   linkPath,
   onChangeInput,
-  // errors,
+  errors,
+  values,
   isValid,
   onSubmit,
+  serverErrMsg,
 }) {
+  console.log(values);
+
   return (
     <section className="auth">
-      <div className="auth__logo"></div>
+      <Link to="/">
+        <div className="auth__logo"></div>
+      </Link>
       <h1 className="auth__title">{`${title}`}</h1>
       <form onSubmit={onSubmit} className="auth__form">
         <fieldset className="auth__fieldset">
@@ -34,7 +41,7 @@ export default function AuthForm({
                 required
               />
               <span className="auth__input-error" id="name-error">
-                {/* {errors.name || ""} */}
+                {errors.name || ""}
               </span>
             </label>
           )}
@@ -48,7 +55,7 @@ export default function AuthForm({
               onChange={onChangeInput}
             />
             <span className="auth__input-error" id="email-error">
-              {/* {errors.email || ""} */}
+              {errors.email || ""}
             </span>
           </label>
           <label className="auth__label">
@@ -62,18 +69,16 @@ export default function AuthForm({
               required
             />
             <span className="auth__input-error" id="password-error">
-              {/* {errors.password || ""} */}
+              {errors.password || ""}
             </span>
           </label>
         </fieldset>
-        <button
-          type="submit"
-          value="Отправить"
-          className={`auth__submit-btn`}
-          disabled={!isValid}
-        >
-          {btnName}
-        </button>
+        <FormButton
+          btnName={btnName}
+          isValid={isValid}
+          values={values}
+          serverErrMsg={serverErrMsg}
+        />
       </form>
       <p className="auth__signed-up">
         {authQuestion}

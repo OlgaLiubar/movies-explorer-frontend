@@ -8,14 +8,24 @@ import Footer from "../Footer/Footer";
 import Preloader from "../Preloader/Preloader";
 import PropTypes from "prop-types";
 
-export default function Movies({ handleBurgerClick, cards, findMovies }) {
+export default function Movies({
+  handleBurgerClick,
+  cards,
+  findMovies,
+  loggedIn,
+  onSaveMovie,
+}) {
   const isLoading = false;
   return (
     <>
-      <Header handleBurgerClick={handleBurgerClick} />
+      <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
       <section className="movies">
-        <SearchForm findMovies={findMovies}/>
-        {isLoading ? <Preloader /> : <MoviesCardList cards={cards} />}
+        <SearchForm findMovies={findMovies} />
+        {isLoading ? (
+          <Preloader />
+        ) : (
+          <MoviesCardList cards={cards} onSaveMovie={onSaveMovie} />
+        )}
       </section>
       <Footer />
     </>

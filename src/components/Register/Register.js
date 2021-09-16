@@ -4,7 +4,7 @@ import AuthForm from "../AuthForm/AuthForm";
 import { useFormWithValidation } from "../../hooks/useForm";
 import Preloader from "../Preloader/Preloader";
 
-export default function Register({ onSubmit, isLoading }) {
+export default function Register({ onSubmit, isLoading, serverErrMsg }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
   // console.log(values)
 
@@ -30,6 +30,7 @@ export default function Register({ onSubmit, isLoading }) {
           errors={errors}
           isValid={isValid}
           isLoading={isLoading}
+          serverErrMsg={serverErrMsg} 
         />
       )}
     </>
