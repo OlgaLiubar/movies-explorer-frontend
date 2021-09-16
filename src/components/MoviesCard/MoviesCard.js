@@ -6,30 +6,34 @@ import { useLocation } from "react-router-dom";
 
 export default function MoviesCard({
   card,
-  onSaveMovie
+  onSaveMovie,
+  // onDeleteMovie,
+  isSavedMovie,
 }) {
   const path = useLocation().pathname;
-  const isSaved = false;
 
-  // function handlePathChange() {
-  //   let btnClassName = "";
-  //   if (path === "/saved-movies") {
-  //     btnClassName = "card__save-button_delete";
-  //   } else if (isSaved) {
-  //     btnClassName = "card__save-button_checked";
-  //   } else {
-  //     btnClassName = "card__save-button";
-  //   }
-  //   return btnClassName;
-  // }
+  const isSaved = isSavedMovie(card);
 
-  //Если это сохраненное кино - покажи кнопку удалить
-  //Если нет - 
+  function handleButtonChange() {
+    let btnClassName = "";
+    if (path === "/saved-movies") {
+      btnClassName = "card__save-button_delete";
+    } else if (isSaved) {
+      btnClassName = "card__save-button_checked";
+    } else {
+      btnClassName = "card__save-button";
+    }
+    return btnClassName;
+  }
 
   function handleSaveClick() {
+    // console.log('clicked')
     onSaveMovie(card);
-    setIsSavedCard
-    //смени кнопку на сохраненную
+  }
+
+  function handleDeleteClick() {
+    // onDeleteMovie(card);
+    console.log('clicked')
   }
 
   return (
@@ -46,20 +50,14 @@ export default function MoviesCard({
           className="card__image"
         />
       </a>
-      {/* <button
-        className={handlePathChange()}
-        type="button"
-        onClick={path === "/saved-movies" ? handleDeleteClick : handleSaveClick}
-      >
-        {isSaved || path === "/saved-movies" ? "" : "Сохранить"}
-      </button> */}
       <button
-        className="testbutton"
+        className={handleButtonChange()}
         type="button"
-        onClick={handleSaveClick}
+        onClick={path === "/saved-movies" ? handleDeleteClick : handleSaveClick }
       >
         {isSaved || path === "/saved-movies" ? "" : "Сохранить"}
       </button>
+
       <div className="card__info">
         <h2 className="card__title">{card.nameRU}</h2>
         <p className="card__duration">{getTimeFromMins(card.duration)}</p>

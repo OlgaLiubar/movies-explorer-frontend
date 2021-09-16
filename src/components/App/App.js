@@ -250,6 +250,7 @@ function App() {
             cards={foundMovies}
             loggedIn={loggedIn}
             onSaveMovie={handleSaveMovie}
+            isSavedMovie={isSavedMovie}
           />
 
           <ProtectedRoute
@@ -260,6 +261,7 @@ function App() {
             savedCards={savedMovies}
             loggedIn={loggedIn}
             setSavedMovies={setSavedMovies}
+            isSavedMovie={isSavedMovie}
           />
 
           <ProtectedRoute

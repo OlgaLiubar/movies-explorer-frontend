@@ -7,7 +7,7 @@ import Footer from "../Footer/Footer";
 import Preloader from "../Preloader/Preloader";
 import PropTypes from "prop-types";
 
-export default function SavedMovies({ handleBurgerClick, savedCards, loggedIn }) {
+export default function SavedMovies({ handleBurgerClick, savedCards, loggedIn, isSavedMovie }) {
  
   const [isLoading, setisLoading] = React.useState(false);
 
@@ -22,7 +22,7 @@ export default function SavedMovies({ handleBurgerClick, savedCards, loggedIn })
       <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn}/>
       <section className="saved-movies">
         <SearchForm handleSearchClick={handleSearchClick}/>
-        {isLoading ? <Preloader /> : <MoviesCardList cards={savedCards} />}
+        {isLoading ? <Preloader /> : <MoviesCardList cards={savedCards} isSavedMovie={isSavedMovie} />}
       </section>
       <Footer />
     </>

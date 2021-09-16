@@ -14,9 +14,10 @@ export default function Movies({
   findMovies,
   loggedIn,
   onSaveMovie,
-  isLoading
+  isLoading,
+  isSavedMovie,
 }) {
-  console.log(cards)
+  console.log(cards);
   return (
     <>
       <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
@@ -25,7 +26,11 @@ export default function Movies({
         {isLoading ? (
           <Preloader />
         ) : (
-          <MoviesCardList cards={cards} onSaveMovie={onSaveMovie} />
+          <MoviesCardList
+            cards={cards}
+            onSaveMovie={onSaveMovie}
+            isSavedMovie={isSavedMovie}
+          />
         )}
       </section>
       <Footer />

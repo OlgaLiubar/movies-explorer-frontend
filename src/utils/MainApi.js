@@ -38,7 +38,7 @@ class Api {
     saveMovieCard(movie) {
       return fetch(`${this._url}/movies`, {
         method: 'POST',
-        // credentials: 'include',
+        credentials: 'include',
         headers: this._headers,
         body: JSON.stringify({
           country: `${movie.country !== (undefined || '' || null) ? movie.country : 'no info'}`,
@@ -53,7 +53,7 @@ class Api {
           : movie.trailerLink
           }`,
           thumbnail: `${MOVIES_API_URL}${movie.image.formats.thumbnail.url}`,
-          movieId: movie.id,
+          id: movie.id,
           nameRU: `${movie.nameRU === ('' || null) ? 'no info' : movie.nameRU}`,
           nameEN: `${movie.nameEN === ('' || null) ? 'no info' : movie.nameEN}`,
         })

@@ -3,7 +3,7 @@ import React from "react";
 
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-export default function MoviesCardList({cards, onSaveMovie}) {
+export default function MoviesCardList({cards, onSaveMovie, isSavedMovie}) {
   return (
     <section className="moviesCardList">
       <ul className="moviesCardList__gallery">
@@ -12,6 +12,7 @@ export default function MoviesCardList({cards, onSaveMovie}) {
           key={card.id}
           card={card}
           onSaveMovie={onSaveMovie}
+          isSavedMovie={isSavedMovie}
           />
         ))}
       </ul>
