@@ -61,15 +61,14 @@ class Api {
         .then(this._checkResponse)
     }
   
-  
-    // deleteCard(cardId) {
-    //   return fetch(`${this._url}/cards/${cardId}`, {
-    //     method: 'DELETE',
-    //     credentials: 'include',
-    //     headers: this._headers
-    //   })
-    //     .then(this._checkResponse)
-    // }
+    deleteMovie(movieId) {
+      return fetch(`${this._url}/movies/${movieId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: this._headers
+      })
+        .then(this._checkResponse)
+    }
   
     uploadUserInfo(data) {
       return fetch(`${this._url}/users/me`, {

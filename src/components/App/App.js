@@ -234,6 +234,23 @@ function App() {
     return savedMovies.find((item) => item.id === card.id);
   }
 
+  //Обработчик удаления карточки из сохраненных
+  function handleRemoveSavedMovie(movieId) {
+    api.deleteMovie(movieId)
+      .then((deletedMovie) => {
+        if (!deletedMovie) {
+          throw new Error('При удалении фильма произошла ошибка');
+        } else {
+          const newSavedMoviesArr = savedMovies.filter((mov) => mov.id !== deletedMovie.data.id);
+          setSavedMovies(newSavedMoviesArr);
+          // setSavedFilteredMovies(newSavedMoviesArr);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -262,6 +279,7 @@ function App() {
             loggedIn={loggedIn}
             setSavedMovies={setSavedMovies}
             isSavedMovie={isSavedMovie}
+            onDeleteMovie={handleRemoveSavedMovie}
           />
 
           <ProtectedRoute

@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 export default function MoviesCard({
   card,
   onSaveMovie,
-  // onDeleteMovie,
+  onDeleteMovie,
   isSavedMovie,
 }) {
   const path = useLocation().pathname;
@@ -32,7 +32,7 @@ export default function MoviesCard({
   }
 
   function handleDeleteClick() {
-    // onDeleteMovie(card);
+    onDeleteMovie(card._id);
     console.log('clicked')
   }
 

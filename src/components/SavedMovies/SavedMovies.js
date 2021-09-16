@@ -7,8 +7,13 @@ import Footer from "../Footer/Footer";
 import Preloader from "../Preloader/Preloader";
 import PropTypes from "prop-types";
 
-export default function SavedMovies({ handleBurgerClick, savedCards, loggedIn, isSavedMovie }) {
- 
+export default function SavedMovies({
+  handleBurgerClick,
+  savedCards,
+  loggedIn,
+  isSavedMovie,
+  onDeleteMovie,
+}) {
   const [isLoading, setisLoading] = React.useState(false);
 
   function handleSearchClick() {
@@ -16,13 +21,21 @@ export default function SavedMovies({ handleBurgerClick, savedCards, loggedIn, i
   }
 
   console.log(`а вот и карточки:${savedCards}`);
-  
+
   return (
     <>
-      <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn}/>
+      <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
       <section className="saved-movies">
-        <SearchForm handleSearchClick={handleSearchClick}/>
-        {isLoading ? <Preloader /> : <MoviesCardList cards={savedCards} isSavedMovie={isSavedMovie} />}
+        <SearchForm handleSearchClick={handleSearchClick} />
+        {isLoading ? (
+          <Preloader />
+        ) : (
+          <MoviesCardList
+            cards={savedCards}
+            isSavedMovie={isSavedMovie}
+            onDeleteMovie={onDeleteMovie}
+          />
+        )}
       </section>
       <Footer />
     </>
