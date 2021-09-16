@@ -1,5 +1,7 @@
 // import { MAIN_API_URL, MOVIES_API_URL } from '../config/config';
-const MOVIES_API_URL = "https://api.nomoreparties.co/beatfilm-movies";
+const MOVIES_API_URL = "https://api.nomoreparties.co";
+const TRAILER = "https://www.youtube.com/watch?v=Af8Itqfk2l4"
+const REGEX = /http(s)?:\/\/w{0,3}?[a-zA-Z0-9]+[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=]*/;
 
 class Api {
     constructor(options) {
@@ -39,17 +41,21 @@ class Api {
         // credentials: 'include',
         headers: this._headers,
         body: JSON.stringify({
-          country: movie.country,
-          director: movie.director,
+          country: `${movie.country !== (undefined || '' || null) ? movie.country : 'no info'}`,
+          director: `${movie.director !== (undefined || '' || null) ? movie.director : 'no info'}`,
           duration: movie.duration,
           year: movie.year,
           description: movie.description,
           image: `${MOVIES_API_URL}${movie.image.url}`,
-          trailer: movie.trailerLink,
+          trailer: `${
+          movie.trailerLink === null || '' || !movie.trailerLink.match(REGEX)
+          ? TRAILER
+          : movie.trailerLink
+          }`,
           thumbnail: `${MOVIES_API_URL}${movie.image.formats.thumbnail.url}`,
           movieId: movie.id,
-          nameRU: movie.nameRU,
-          nameEN: movie.nameEN
+          nameRU: `${movie.nameRU === ('' || null) ? 'no info' : movie.nameRU}`,
+          nameEN: `${movie.nameEN === ('' || null) ? 'no info' : movie.nameEN}`,
         })
       })
         .then(this._checkResponse)

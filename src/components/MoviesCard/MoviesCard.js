@@ -23,9 +23,13 @@ export default function MoviesCard({
   //   return btnClassName;
   // }
 
+  //Если это сохраненное кино - покажи кнопку удалить
+  //Если нет - 
+
   function handleSaveClick() {
     onSaveMovie(card);
-    console.log(card);
+    setIsSavedCard
+    //смени кнопку на сохраненную
   }
 
   return (
@@ -37,7 +41,7 @@ export default function MoviesCard({
         target="_blank"
       >
         <img
-          src={` https://api.nomoreparties.co${card.image.url}`}
+          src={card.img ? card.img : card.image}
           alt={card.image.name}
           className="card__image"
         />
@@ -45,7 +49,7 @@ export default function MoviesCard({
       {/* <button
         className={handlePathChange()}
         type="button"
-        onClick={handleSaveClick}
+        onClick={path === "/saved-movies" ? handleDeleteClick : handleSaveClick}
       >
         {isSaved || path === "/saved-movies" ? "" : "Сохранить"}
       </button> */}

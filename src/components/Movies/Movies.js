@@ -14,8 +14,9 @@ export default function Movies({
   findMovies,
   loggedIn,
   onSaveMovie,
+  isLoading
 }) {
-  const isLoading = false;
+  console.log(cards)
   return (
     <>
       <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />

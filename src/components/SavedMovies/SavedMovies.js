@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import Header from "../Header/Header";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
@@ -6,20 +7,22 @@ import Footer from "../Footer/Footer";
 import Preloader from "../Preloader/Preloader";
 import PropTypes from "prop-types";
 
-export default function SavedMovies({ handleBurgerClick }) {
+export default function SavedMovies({ handleBurgerClick, savedCards, loggedIn }) {
  
   const [isLoading, setisLoading] = React.useState(false);
 
   function handleSearchClick() {
     setisLoading(true);
   }
+
+  console.log(`а вот и карточки:${savedCards}`);
   
   return (
     <>
-      <Header handleBurgerClick={handleBurgerClick} />
+      <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn}/>
       <section className="saved-movies">
         <SearchForm handleSearchClick={handleSearchClick}/>
-        {isLoading ? <Preloader /> : <MoviesCardList />}
+        {isLoading ? <Preloader /> : <MoviesCardList cards={savedCards} />}
       </section>
       <Footer />
     </>

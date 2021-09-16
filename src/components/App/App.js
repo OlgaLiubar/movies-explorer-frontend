@@ -20,6 +20,8 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { filterMovies } from "../../utils/functions";
 // import Preloader from "../Preloader/Preloader";
 
+const MOVIES_API_URL = "https://api.nomoreparties.co";
+
 function App() {
   const history = useHistory();
   const [currentUser, setCurrentUser] = React.useState({});
@@ -29,7 +31,10 @@ function App() {
   const [serverErrMsg, setServerErrMsg] = React.useState("");
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
+  //Карточки с найденными по запросу фильмами
   const [foundMovies, setFoundMovies] = React.useState([]);
+  //Карточки с сохраненными фильмами
+  // const [isSavedMovie, setIsSavedMovie] = React.useState([]);
   const [savedMovies, setSavedMovies] = React.useState([]);
 
   function handleBurgerClick() {
@@ -44,19 +49,55 @@ function App() {
     setServerErrMsg(err);
   }
 
+  // //Получаем данные пользователя
+
+  // function getUserData() {
+  //   api
+  //     .getUserData()
+  //     .then((userData) => {
+  //       setCurrentUser(userData);
+  //       getSavedMovies();
+  //       // setLoggedIn(true);
+  //     })
+  //     .catch((err) => {
+  //       handleServerError(err);
+  //     });
+  // }
+
+  // //Получаем сохраненные фильмы
+  // function getSavedMovies() {
+  //   api
+  //     .getSavedMovies()
+  //     .then((res) => {
+  //       if (!res) {
+  //         throw new Error("Ошибка при получении сохраненных фильмов");
+  //       }
+  //       //записываем сохраненные фильмы(с апи) в сохраненные фильмы
+  //       setSavedMovies(res.data);
+  //       // setSavedFilteredMovies(res.data);
+  //     })
+  //     .catch((err) => {
+  //       handleServerError(err);
+  //     });
+  // }
+
+  //Получаем данные пользователя и сохраненные фильмы
   React.useEffect(() => {
     if (loggedIn) {
       Promise.all([api.getUserData(), api.getSavedMovies()])
         .then(([userData, savedMovies]) => {
           setCurrentUser(userData);
+          // console.log('карент юзер');
           // console.log(currentUser);
           if (savedMovies) {
-
-            console.log("Есть сохраненные фильмы");
+            //записываем сохраненные фильмы(с апи) в сохраненные фильмы
+            setSavedMovies(savedMovies);
+            //записываем сохраненные фильмы(с апи) в локальное хранилище
+            localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
           }
         })
         .catch((err) => {
-          console.log(err);
+          handleServerError(err);
         });
     }
   }, [loggedIn]);
@@ -138,7 +179,7 @@ function App() {
     history.push("/");
   }
 
-  //запись объекта карточек в local storage
+  //запись объекта карточек с сервера БитФильмз в local storage
 
   React.useEffect(() => {
     if (!localStorage.movies) {
@@ -154,23 +195,43 @@ function App() {
     }
   }, [loggedIn]);
 
+  //Обработчик поиска фильма по ключевому слову: записываем фильмы по запросу в стейт и в локальное хранилище
   function handleMovieSearch(query) {
     const filteredMovies = filterMovies(JSON.parse(localStorage.movies), query);
-    return setFoundMovies(filteredMovies);
+    const newFilteredMovies = filteredMovies.map((movie) => {
+      return { ...movie, img: `${MOVIES_API_URL}${movie.image.url}` };
+    });
+    setFoundMovies(newFilteredMovies);
+    localStorage.setItem("foundMovies", JSON.stringify(newFilteredMovies));
   }
+
+  // console.log("мы карточки по запросу к стороннему апи");
+  // console.log(foundMovies);
 
   //Обработчик сохранения найденного фильма
   function handleSaveMovie(movie) {
     // setIsLoading(true);
     api
       .saveMovieCard(movie)
-      .then((savedMovie) => {
-        console.log(savedMovie);
-        setSavedMovies((state) => [savedMovie, ...state]);
-        console.log(savedMovies);
+      .then((savedCard) => {
+        // console.log("я ответ от апи");
+        // console.log(savedCard);
+        setSavedMovies([...savedMovies, savedCard]);
+        // console.log("а мы - стейт");
+        // console.log(savedMovies);
       })
       .catch((err) => console.log(`Добавление карточки: ${err}`))
       .finally(() => console.log("Уф, сохранили!"));
+  }
+
+  //обновляем локальное хранилище при добавлении сохраненной карточки
+  React.useEffect(() => {
+    localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
+  }, [savedMovies]);
+
+  //Проверяем по id, есть ли фильм в сохраненных
+  function isSavedMovie(card) {
+    return savedMovies.find((item) => item.id === card.id);
   }
 
   return (
@@ -196,8 +257,9 @@ function App() {
             component={SavedMovies}
             findMovies={handleMovieSearch}
             handleBurgerClick={handleBurgerClick}
-            cards={foundMovies}
+            savedCards={savedMovies}
             loggedIn={loggedIn}
+            setSavedMovies={setSavedMovies}
           />
 
           <ProtectedRoute
