@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { getTimeFromMins } from "../../utils/functions";
 import { useLocation } from "react-router-dom";
+const IMG_BASE_URL = "https://api.nomoreparties.co";
 
 export default function MoviesCard({
   card,
@@ -45,7 +46,7 @@ export default function MoviesCard({
         target="_blank"
       >
         <img
-          src={card.img ? card.img : card.image}
+          src={card.image.url ? `${IMG_BASE_URL}${card.image.url}` : card.image}
           alt={card.image.name}
           className="card__image"
         />

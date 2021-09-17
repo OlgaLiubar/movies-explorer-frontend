@@ -20,7 +20,7 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { filterMovies } from "../../utils/functions";
 // import Preloader from "../Preloader/Preloader";
 
-const MOVIES_API_URL = "https://api.nomoreparties.co";
+// const MOVIES_API_URL = "https://api.nomoreparties.co";
 
 function App() {
   const history = useHistory();
@@ -31,10 +31,10 @@ function App() {
   const [serverErrMsg, setServerErrMsg] = React.useState("");
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
+  // const [movies, setMovies] = React.useState([]);
   //Карточки с найденными по запросу фильмами
   const [foundMovies, setFoundMovies] = React.useState([]);
   //Карточки с сохраненными фильмами
-  // const [isSavedMovie, setIsSavedMovie] = React.useState([]);
   const [savedMovies, setSavedMovies] = React.useState([]);
 
   function handleBurgerClick() {
@@ -181,32 +181,60 @@ function App() {
 
   //запись объекта карточек с сервера БитФильмз в local storage
 
-  React.useEffect(() => {
-    if (!localStorage.movies) {
-      moviesApi
-        .getMovies()
-        .then((moviesData) => {
-          // console.log("Получили фильмы");
-          localStorage.setItem("movies", JSON.stringify(moviesData));
-          // console.log(localStorage.movies);
-        })
-        .catch((err) => console.log(err))
-        .finally(() => console.log("good job!"));
-    }
-  }, [loggedIn]);
+  // React.useEffect(() => {
+  //   if (!localStorage.movies) {
+  //     moviesApi
+  //       .getMovies()
+  //       .then((moviesData) => {
+  //         // console.log("Получили фильмы");
+  //         localStorage.setItem("movies", JSON.stringify(moviesData));
+  //         // console.log(localStorage.movies);
+  //       })
+  //       .catch((err) => console.log(err))
+  //       .finally(() => console.log("good job!"));
+  //   }
+  // }, [loggedIn]);
 
   //Обработчик поиска фильма по ключевому слову: записываем фильмы по запросу в стейт и в локальное хранилище
+  // function handleMovieSearch(query) {
+  //   const filteredMovies = filterMovies(JSON.parse(localStorage.movies), query);
+  //   const newFilteredMovies = filteredMovies.map((movie) => {
+  //     return { ...movie, img: `${MOVIES_API_URL}${movie.image.url}` };
+  //   });
+  //   setFoundMovies(newFilteredMovies);
+  //   localStorage.setItem("foundMovies", JSON.stringify(newFilteredMovies));
+  // }
+
   function handleMovieSearch(query) {
-    const filteredMovies = filterMovies(JSON.parse(localStorage.movies), query);
-    const newFilteredMovies = filteredMovies.map((movie) => {
-      return { ...movie, img: `${MOVIES_API_URL}${movie.image.url}` };
-    });
-    setFoundMovies(newFilteredMovies);
-    localStorage.setItem("foundMovies", JSON.stringify(newFilteredMovies));
+    getMovies(query);
   }
 
-  // console.log("мы карточки по запросу к стороннему апи");
-  // console.log(foundMovies);
+  function getMovies(query) {
+    setIsLoading(true);
+    const localMovies = JSON.parse(localStorage.getItem('movies'));
+    if (localMovies) {
+      setFoundMovies(filterMovies(localMovies, query));
+      localStorage.setItem('foundMovies', JSON.stringify(filterMovies(localMovies, query)));
+      setIsLoading(false);
+    } else {
+      moviesApi.getMovies()
+        .then((moviesData) => {
+          if (moviesData) {
+            localStorage.setItem('movies', JSON.stringify(moviesData));
+            setFoundMovies(filterMovies(moviesData, query));
+            localStorage.setItem('foundMovies', JSON.stringify(filterMovies(moviesData, query)));
+            setIsLoading(false);
+          } else {
+            setIsLoading(false);
+            throw new Error('Ошибка при получении фильмов');
+          }
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          console.log(error);
+        });
+    }
+  }
 
   //Обработчик сохранения найденного фильма
   function handleSaveMovie(movie) {
