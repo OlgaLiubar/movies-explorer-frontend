@@ -7,31 +7,52 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Preloader from "../Preloader/Preloader";
 import PropTypes from "prop-types";
+import MovieNotFound from "../MovieNotFound/MovieNotFound";
 
 export default function Movies({
   handleBurgerClick,
   cards,
-  findMovies,
+  handleMovieSearch,
   loggedIn,
   onSaveMovie,
   isLoading,
   isSavedMovie,
 }) {
-  console.log(cards);
+  const [isCheckedForShortFilms, setIsCheckedForShortFilms] = React.useState(
+    false
+  );
+ 
+  const [isShortFilm, setIsShortFilm] = React.useState(false);
+
+  //если чекбокс отмечен, ищем в массиве с фильмами короткометражки
+  function filterShortFilms(moviesArr) {
+    return moviesArr.filter((movie) =>
+      isShortFilm ? movie.duration <= 40 : true
+    );
+  }
+
+  function handleCheck() {
+    setIsCheckedForShortFilms(true);
+    setIsShortFilm(!isShortFilm);
+  }
+
   return (
     <>
       <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
       <section className="movies">
-        <SearchForm findMovies={findMovies} />
-        {isLoading ? (
-          <Preloader />
-        ) : (
-          <MoviesCardList
-            cards={cards}
-            onSaveMovie={onSaveMovie}
-            isSavedMovie={isSavedMovie}
-          />
+        <SearchForm
+          handleMovieSearch={handleMovieSearch}
+          handleCheck={handleCheck}
+        />
+        {isLoading && <Preloader />}
+        {filterShortFilms(cards).length === 0 && isCheckedForShortFilms && !isLoading && (
+          <MovieNotFound />
         )}
+        <MoviesCardList
+          cardList={filterShortFilms(cards)}
+          onSaveMovie={onSaveMovie}
+          isSavedMovie={isSavedMovie}
+        />
       </section>
       <Footer />
     </>

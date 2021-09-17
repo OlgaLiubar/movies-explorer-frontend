@@ -290,7 +290,7 @@ function App() {
           <ProtectedRoute
             path="/movies"
             component={Movies}
-            findMovies={handleMovieSearch}
+            handleMovieSearch={handleMovieSearch}
             handleBurgerClick={handleBurgerClick}
             cards={foundMovies}
             loggedIn={loggedIn}

@@ -3,11 +3,11 @@ import React from "react";
 
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-export default function MoviesCardList({cards, onSaveMovie, isSavedMovie, onDeleteMovie}) {
+export default function MoviesCardList({cardList, onSaveMovie, isSavedMovie, onDeleteMovie}) {
   return (
     <section className="moviesCardList">
       <ul className="moviesCardList__gallery">
-        {cards.map((card) => (
+        {cardList.map((card) => (
           <MoviesCard 
           key={card.id}
           card={card}

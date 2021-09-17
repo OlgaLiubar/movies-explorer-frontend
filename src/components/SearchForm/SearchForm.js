@@ -2,19 +2,23 @@
 import React from "react";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import PropTypes from "prop-types";
-import { useFormWithValidation } from "../../hooks/useForm";
 
-export default function SearchForm({ findMovies }) {
-  const { values, handleChange } = useFormWithValidation();
+export default function SearchForm({ handleMovieSearch, isShortFilm, handleCheck }) {
+  const [query, setQuery] = React.useState("");
 
   const handleChangeInput = (evt) => {
-    handleChange(evt);
+    setQuery(evt.target.value);
   }
 
-  const handleSubmit = (evt) => {
+  console.log(query);
+  
+//нажимаем на поиск, записываем запрос в стейт, ищем фильмы по запросу
+  function handleSubmit(evt) {
     evt.preventDefault();
-    findMovies(values.input);
-}
+    handleMovieSearch(query);
+    setQuery("");
+    // console.log(query);
+  }
 
   return (
     <section className="search">
@@ -35,7 +39,7 @@ export default function SearchForm({ findMovies }) {
             id="search__button"
           />
         </div>
-        <FilterCheckbox />
+        <FilterCheckbox isShortFilm={isShortFilm} handleCheck={handleCheck}/>
       </form>
     </section>
   );
