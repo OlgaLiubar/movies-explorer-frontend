@@ -8,13 +8,13 @@ import Portfolio from "../Portfolio/Portfolio";
 import Promo from "../Promo/Promo";
 import Techs from "../Techs/Techs";
 
-export default function Main({loggedIn}) {
+export default function Main({loggedIn, handleBurgerClick}) {
   return (
     <>
       <Header 
       loggedIn={loggedIn} 
       headerDark="header_dark"
-      isPromo="nav-landing__btn_promo"
+      handleBurgerClick={handleBurgerClick}
       />
       <Promo />
       <AboutProject />

@@ -3,7 +3,7 @@ import React from "react";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import PropTypes from "prop-types";
 
-export default function SearchForm({ handleMovieSearch, isShortFilm, handleCheck }) {
+export default function SearchForm({ handleMovieSearch, isShortFilm, handleCheck, resetShownMovies }) {
   const [query, setQuery] = React.useState("");
 
   const handleChangeInput = (evt) => {
@@ -15,9 +15,11 @@ export default function SearchForm({ handleMovieSearch, isShortFilm, handleCheck
 //нажимаем на поиск, записываем запрос в стейт, ищем фильмы по запросу
   function handleSubmit(evt) {
     evt.preventDefault();
+    if(query.length == 0) {
+      resetShownMovies()
+    }
     handleMovieSearch(query);
     setQuery("");
-    // console.log(query);
   }
 
   return (
@@ -29,7 +31,6 @@ export default function SearchForm({ handleMovieSearch, isShortFilm, handleCheck
             type="text"
             name="input"
             placeholder="Фильм"
-            required
             onChange={handleChangeInput}
           />
           <button

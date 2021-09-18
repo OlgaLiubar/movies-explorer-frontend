@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { Route, Switch, useHistory, Redirect } from "react-router-dom";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import "./App.css";
@@ -18,6 +18,7 @@ import Sidebar from "../Sidebar/Sidebar";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 import { filterMovies } from "../../utils/functions";
+import getNumberOfMovies from "../../utils/getNumberOfMovies";
 // import Preloader from "../Preloader/Preloader";
 
 // const MOVIES_API_URL = "https://api.nomoreparties.co";
@@ -31,11 +32,24 @@ function App() {
   const [serverErrMsg, setServerErrMsg] = React.useState("");
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
-  // const [movies, setMovies] = React.useState([]);
   //Карточки с найденными по запросу фильмами
   const [foundMovies, setFoundMovies] = React.useState([]);
+  const [foundSavedMovies, setFoundSavedMovies] = React.useState([]);
+
   //Карточки с сохраненными фильмами
   const [savedMovies, setSavedMovies] = React.useState([]);
+
+  //для ширины окна
+  const [width, setWidth] = React.useState(window.innerWidth);
+  const [isResizing, setIsResizing] = React.useState(false);
+  const [maxNumberOfMovies, setMaxNumberOfMovies] = React.useState(0);
+  const [step, setStep] = React.useState(0);
+
+  //для короткометражек
+  const [isCheckedForShortFilms, setIsCheckedForShortFilms] = React.useState(
+    false
+  );
+  const [isShortFilm, setIsShortFilm] = React.useState(false);
 
   function handleBurgerClick() {
     setIsSidebarOpen(true);
@@ -49,49 +63,16 @@ function App() {
     setServerErrMsg(err);
   }
 
-  // //Получаем данные пользователя
-
-  // function getUserData() {
-  //   api
-  //     .getUserData()
-  //     .then((userData) => {
-  //       setCurrentUser(userData);
-  //       getSavedMovies();
-  //       // setLoggedIn(true);
-  //     })
-  //     .catch((err) => {
-  //       handleServerError(err);
-  //     });
-  // }
-
-  // //Получаем сохраненные фильмы
-  // function getSavedMovies() {
-  //   api
-  //     .getSavedMovies()
-  //     .then((res) => {
-  //       if (!res) {
-  //         throw new Error("Ошибка при получении сохраненных фильмов");
-  //       }
-  //       //записываем сохраненные фильмы(с апи) в сохраненные фильмы
-  //       setSavedMovies(res.data);
-  //       // setSavedFilteredMovies(res.data);
-  //     })
-  //     .catch((err) => {
-  //       handleServerError(err);
-  //     });
-  // }
-
   //Получаем данные пользователя и сохраненные фильмы
   React.useEffect(() => {
     if (loggedIn) {
       Promise.all([api.getUserData(), api.getSavedMovies()])
         .then(([userData, savedMovies]) => {
           setCurrentUser(userData);
-          // console.log('карент юзер');
-          // console.log(currentUser);
           if (savedMovies) {
             //записываем сохраненные фильмы(с апи) в сохраненные фильмы
             setSavedMovies(savedMovies);
+            setFoundSavedMovies(savedMovies);
             //записываем сохраненные фильмы(с апи) в локальное хранилище
             localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
           }
@@ -109,8 +90,6 @@ function App() {
         auth
           .getContent(jwt)
           .then((res) => {
-            // console.log("Есть контакт");
-            // console.log(res);
             if (res) {
               setLoggedIn(true);
             }
@@ -121,10 +100,6 @@ function App() {
 
     checkToken();
   }, [loggedIn, history]);
-
-  // function handleLogin() {
-  //   setLoggedIn(true);
-  // }
 
   //Обработчик сабмита формы регистрации
   function handleRegister({ name, email, password }) {
@@ -179,54 +154,44 @@ function App() {
     history.push("/");
   }
 
-  //запись объекта карточек с сервера БитФильмз в local storage
-
-  // React.useEffect(() => {
-  //   if (!localStorage.movies) {
-  //     moviesApi
-  //       .getMovies()
-  //       .then((moviesData) => {
-  //         // console.log("Получили фильмы");
-  //         localStorage.setItem("movies", JSON.stringify(moviesData));
-  //         // console.log(localStorage.movies);
-  //       })
-  //       .catch((err) => console.log(err))
-  //       .finally(() => console.log("good job!"));
-  //   }
-  // }, [loggedIn]);
-
-  //Обработчик поиска фильма по ключевому слову: записываем фильмы по запросу в стейт и в локальное хранилище
-  // function handleMovieSearch(query) {
-  //   const filteredMovies = filterMovies(JSON.parse(localStorage.movies), query);
-  //   const newFilteredMovies = filteredMovies.map((movie) => {
-  //     return { ...movie, img: `${MOVIES_API_URL}${movie.image.url}` };
-  //   });
-  //   setFoundMovies(newFilteredMovies);
-  //   localStorage.setItem("foundMovies", JSON.stringify(newFilteredMovies));
-  // }
-
   function handleMovieSearch(query) {
     getMovies(query);
   }
 
+  function handleSavedMovieSearch(query) {
+    setFoundSavedMovies(filterMovies(savedMovies, query));
+  }
+
+  function resetShownMovies() {
+    setFoundSavedMovies(savedMovies);
+    setFoundMovies([]);
+  }
+
   function getMovies(query) {
     setIsLoading(true);
-    const localMovies = JSON.parse(localStorage.getItem('movies'));
+    const localMovies = JSON.parse(localStorage.getItem("movies"));
     if (localMovies) {
       setFoundMovies(filterMovies(localMovies, query));
-      localStorage.setItem('foundMovies', JSON.stringify(filterMovies(localMovies, query)));
+      localStorage.setItem(
+        "foundMovies",
+        JSON.stringify(filterMovies(localMovies, query))
+      );
       setIsLoading(false);
     } else {
-      moviesApi.getMovies()
+      moviesApi
+        .getMovies()
         .then((moviesData) => {
           if (moviesData) {
-            localStorage.setItem('movies', JSON.stringify(moviesData));
+            localStorage.setItem("movies", JSON.stringify(moviesData));
             setFoundMovies(filterMovies(moviesData, query));
-            localStorage.setItem('foundMovies', JSON.stringify(filterMovies(moviesData, query)));
+            localStorage.setItem(
+              "foundMovies",
+              JSON.stringify(filterMovies(moviesData, query))
+            );
             setIsLoading(false);
           } else {
             setIsLoading(false);
-            throw new Error('Ошибка при получении фильмов');
+            throw new Error("Ошибка при получении фильмов");
           }
         })
         .catch((error) => {
@@ -247,6 +212,7 @@ function App() {
         setSavedMovies([...savedMovies, savedCard]);
         // console.log("а мы - стейт");
         // console.log(savedMovies);
+        setFoundSavedMovies([...savedMovies, savedCard]);
       })
       .catch((err) => console.log(`Добавление карточки: ${err}`))
       .finally(() => console.log("Уф, сохранили!"));
@@ -264,14 +230,17 @@ function App() {
 
   //Обработчик удаления карточки из сохраненных
   function handleRemoveSavedMovie(movieId) {
-    api.deleteMovie(movieId)
+    api
+      .deleteMovie(movieId)
       .then((deletedMovie) => {
         if (!deletedMovie) {
-          throw new Error('При удалении фильма произошла ошибка');
+          throw new Error("При удалении фильма произошла ошибка");
         } else {
-          const newSavedMoviesArr = savedMovies.filter((mov) => mov.id !== deletedMovie.data.id);
-          setSavedMovies(newSavedMoviesArr);
-          // setSavedFilteredMovies(newSavedMoviesArr);
+          const newSavedMovies = savedMovies.filter(
+            (movie) => movie.id !== deletedMovie.data.id
+          );
+          setSavedMovies(newSavedMovies);
+          setFoundSavedMovies(newSavedMovies);
         }
       })
       .catch((err) => {
@@ -279,12 +248,49 @@ function App() {
       });
   }
 
+  //если чекбокс отмечен, ищем в массиве с фильмами короткометражки
+  function filterShortFilms(moviesArr) {
+    return moviesArr.filter((movie) =>
+      isShortFilm ? movie.duration <= 40 : true
+    );
+  }
+
+  function handleCheck() {
+    setIsCheckedForShortFilms(true);
+    setIsShortFilm(!isShortFilm);
+  }
+
+  //для изменения ширины окна
+  //Если мы меняем размер окна, запиши в setWidth новую ширину
+  useLayoutEffect(() => {
+    function updateWidth() {
+      if (!isResizing) {
+        setIsResizing(true);
+        setTimeout(() => {
+          setWidth(window.innerWidth);
+          setIsResizing(false);
+        }, 700);
+      }
+    }
+    window.addEventListener("resize", updateWidth);
+    updateWidth();
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
+
+  //получаем лимит для рендера фильмов и шаг
+
+  React.useEffect(() => {
+    const { maxNumberOfMovies, step } = getNumberOfMovies(width);
+    setMaxNumberOfMovies(maxNumberOfMovies);
+    setStep(step);
+  }, [width]);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Switch>
           <Route path="/" exact>
-            <Main loggedIn={loggedIn} />
+            <Main loggedIn={loggedIn} handleBurgerClick={handleBurgerClick}/>
           </Route>
 
           <ProtectedRoute
@@ -294,20 +300,46 @@ function App() {
             handleBurgerClick={handleBurgerClick}
             cards={foundMovies}
             loggedIn={loggedIn}
+            isLoading={isLoading}
             onSaveMovie={handleSaveMovie}
             isSavedMovie={isSavedMovie}
+            setIsCheckedForShortFilms={setIsCheckedForShortFilms}
+            isCheckedForShortFilms={isCheckedForShortFilms}
+            isShortFilm={isShortFilm}
+            setIsShortFilm={setIsShortFilm}
+            filterShortFilms={filterShortFilms}
+            handleCheck={handleCheck}
+            resetShownMovies={resetShownMovies}
+            width={width}
+            setMaxNumberOfMovies={setMaxNumberOfMovies}
+            maxNumberOfMovies={maxNumberOfMovies}
+            setStep={setStep}
+            step={step}
           />
 
           <ProtectedRoute
             path="/saved-movies"
             component={SavedMovies}
-            findMovies={handleMovieSearch}
+            handleSavedMovieSearch={handleSavedMovieSearch}
             handleBurgerClick={handleBurgerClick}
-            savedCards={savedMovies}
+            savedCards={foundSavedMovies}
             loggedIn={loggedIn}
+            isLoading={isLoading}
             setSavedMovies={setSavedMovies}
             isSavedMovie={isSavedMovie}
             onDeleteMovie={handleRemoveSavedMovie}
+            setIsCheckedForShortFilms={setIsCheckedForShortFilms}
+            isCheckedForShortFilms={isCheckedForShortFilms}
+            isShortFilm={isShortFilm}
+            setIsShortFilm={setIsShortFilm}
+            filterShortFilms={filterShortFilms}
+            handleCheck={handleCheck}
+            resetShownMovies={resetShownMovies}
+            width={width}
+            setMaxNumberOfMovies={setMaxNumberOfMovies}
+            maxNumberOfMovies={maxNumberOfMovies}
+            setStep={setStep}
+            step={step}
           />
 
           <ProtectedRoute

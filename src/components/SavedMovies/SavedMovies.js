@@ -8,17 +8,22 @@ import Preloader from "../Preloader/Preloader";
 import PropTypes from "prop-types";
 
 export default function SavedMovies({
+  isLoading,
   handleBurgerClick,
   savedCards,
   loggedIn,
   isSavedMovie,
   onDeleteMovie,
+  handleSavedMovieSearch,
+  isCheckedForShortFilms,
+  filterShortFilms,
+  handleCheck,
+  resetShownMovies,
+  setMaxNumberOfMovies, 
+  maxNumberOfMovies,
+  setStep,
+  step
 }) {
-  const [isLoading, setisLoading] = React.useState(false);
-
-  function handleSearchClick() {
-    setisLoading(true);
-  }
 
   console.log(`а вот и карточки:${savedCards}`);
 
@@ -26,16 +31,23 @@ export default function SavedMovies({
     <>
       <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
       <section className="saved-movies">
-        <SearchForm handleSearchClick={handleSearchClick} />
-        {isLoading ? (
-          <Preloader />
-        ) : (
+        <SearchForm     
+          handleMovieSearch={handleSavedMovieSearch}
+          handleCheck={handleCheck}
+          resetShownMovies={resetShownMovies}
+          />
+        {isLoading && <Preloader/>}
+      {(savedCards.length === 0 && !isCheckedForShortFilms)
+      && <p className="no-saved-movies">У вас пока нет сохраненных фильмов</p>}
           <MoviesCardList
-            cards={savedCards}
+            cardList={filterShortFilms(savedCards)}
             isSavedMovie={isSavedMovie}
             onDeleteMovie={onDeleteMovie}
+            setMaxNumberOfMovies={setMaxNumberOfMovies}
+            maxNumberOfMovies={maxNumberOfMovies}
+            setStep={setStep}
+            step={step}
           />
-        )}
       </section>
       <Footer />
     </>

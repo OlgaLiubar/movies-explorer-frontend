@@ -4,9 +4,17 @@ import AccountButton from "../AccountButton/AccountButton";
 import PropTypes from "prop-types";
 
 export default function Sidebar({ isOpen, onClose }) {
+
+  const handleOverlayClose = (event) => {
+    if (event.target === event.currentTarget && isOpen) {
+      onClose();
+    }
+  };
+  
   return (
     <div
       className={`sidebar__overlay ${isOpen ? "sidebar__overlay_opened" : ""}`}
+      onMouseDown={handleOverlayClose}
     >
       <div className="sidebar">
         <button

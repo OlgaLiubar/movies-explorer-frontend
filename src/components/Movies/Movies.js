@@ -17,24 +17,15 @@ export default function Movies({
   onSaveMovie,
   isLoading,
   isSavedMovie,
+  isCheckedForShortFilms,
+  filterShortFilms,
+  handleCheck,
+  resetShownMovies,
+  setMaxNumberOfMovies, 
+  maxNumberOfMovies,
+  setStep,
+  step
 }) {
-  const [isCheckedForShortFilms, setIsCheckedForShortFilms] = React.useState(
-    false
-  );
- 
-  const [isShortFilm, setIsShortFilm] = React.useState(false);
-
-  //если чекбокс отмечен, ищем в массиве с фильмами короткометражки
-  function filterShortFilms(moviesArr) {
-    return moviesArr.filter((movie) =>
-      isShortFilm ? movie.duration <= 40 : true
-    );
-  }
-
-  function handleCheck() {
-    setIsCheckedForShortFilms(true);
-    setIsShortFilm(!isShortFilm);
-  }
 
   return (
     <>
@@ -43,15 +34,20 @@ export default function Movies({
         <SearchForm
           handleMovieSearch={handleMovieSearch}
           handleCheck={handleCheck}
+          resetShownMovies={resetShownMovies}
         />
         {isLoading && <Preloader />}
-        {filterShortFilms(cards).length === 0 && isCheckedForShortFilms && !isLoading && (
-          <MovieNotFound />
-        )}
+        {filterShortFilms(cards).length === 0 &&
+          isCheckedForShortFilms &&
+          !isLoading && <MovieNotFound />}
         <MoviesCardList
           cardList={filterShortFilms(cards)}
           onSaveMovie={onSaveMovie}
           isSavedMovie={isSavedMovie}
+          setMaxNumberOfMovies={setMaxNumberOfMovies}
+          maxNumberOfMovies={maxNumberOfMovies}
+          setStep={setStep}
+          step={step}
         />
       </section>
       <Footer />
