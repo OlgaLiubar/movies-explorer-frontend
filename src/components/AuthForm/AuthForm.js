@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import FormButton from "../FormButton/FormButton";
+import FormError from "../FormError/FormError";
 
 export default function AuthForm({
   title,
@@ -17,8 +18,9 @@ export default function AuthForm({
   isValid,
   onSubmit,
   serverErrMsg,
+  // isCustomErr,
+  customErr,
 }) {
-  console.log(values);
 
   return (
     <section className="auth">
@@ -62,7 +64,7 @@ export default function AuthForm({
             <p className="auth__input-name">Пароль</p>
             <input
               className="auth__input"
-              maxLength={8}
+              minLength={8}
               type="password"
               name="password"
               onChange={onChangeInput}
@@ -73,11 +75,14 @@ export default function AuthForm({
             </span>
           </label>
         </fieldset>
+        <FormError
+          serverErrMsg={serverErrMsg}
+          customErr={customErr}
+        />
         <FormButton
           btnName={btnName}
           isValid={isValid}
           values={values}
-          serverErrMsg={serverErrMsg}
         />
       </form>
       <p className="auth__signed-up">

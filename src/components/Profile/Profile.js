@@ -7,6 +7,7 @@ import Header from "../Header/Header";
 import PropTypes from "prop-types";
 import Preloader from "../Preloader/Preloader";
 import FormButton from "../FormButton/FormButton";
+import FormError from "../FormError/FormError";
 
 export default function Profile({
   handleBurgerClick,
@@ -14,6 +15,11 @@ export default function Profile({
   handleUpdateUser,
   isLoading,
   loggedIn,
+  customErr,
+  serverErrMsg,
+  // setIsError,
+  isError,
+  resetServerError,
 }) {
   const [isInputDisabled, setIsInputDisabled] = React.useState(true);
   const { name, email } = React.useContext(CurrentUserContext);
@@ -26,6 +32,7 @@ export default function Profile({
   } = useFormWithValidation();
 
   // console.log(values);
+  // console.log(isError);
 
   React.useEffect(() => {
     setValues({
@@ -34,21 +41,23 @@ export default function Profile({
     });
   }, [name, email]);
 
+  React.useEffect(() => {
+    resetServerError();
+  }, []);
+
   function handleSubmit(evt) {
     evt.preventDefault();
     handleUpdateUser(values);
-    setIsInputDisabled(true)
+    setIsInputDisabled(true);
   }
 
-  function enableInput() {
-    setIsInputDisabled(false)
+  function toggleInput() {
+    setIsInputDisabled(!isInputDisabled);
   }
 
   return (
     <>
-      <Header handleBurgerClick={handleBurgerClick}
-      loggedIn={loggedIn}
-      />
+      <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
       <section className="profile">
         <h1 className="profile__title">{`Привет, ${name}!`}</h1>
         <form
@@ -103,8 +112,10 @@ export default function Profile({
                   <button
                     type="button"
                     value="Edit"
-                    className={`profile__submit-btn ${isInputDisabled ? '' : 'profile__submit-btn_clicked'}`}
-                    onClick={enableInput}
+                    className={`profile__submit-btn ${
+                      isInputDisabled ? "" : "profile__submit-btn_clicked"
+                    }`}
+                    onClick={toggleInput}
                   >
                     Редактировать
                   </button>
@@ -118,7 +129,13 @@ export default function Profile({
                   </button>
                 </div>
               ) : (
-                <FormButton btnName="Сохранить" isValid={isValid} />
+                <>
+                  <FormError
+                    serverErrMsg={serverErrMsg}
+                    customErr={customErr}
+                  />
+                  <FormButton btnName="Сохранить" isError={isError} isValid={isValid} />
+                </>
               )}
             </>
           )}

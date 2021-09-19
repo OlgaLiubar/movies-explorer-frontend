@@ -29,7 +29,6 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(false);
 
-  const [serverErrMsg, setServerErrMsg] = React.useState("");
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   //Карточки с найденными по запросу фильмами
@@ -51,6 +50,11 @@ function App() {
   );
   const [isShortFilm, setIsShortFilm] = React.useState(false);
 
+  //ошибки
+  const [customErr, setCustomErr] = React.useState("");
+  const [serverErrMsg, setServerErrMsg] = React.useState("");
+  const [isError, setIsError] = React.useState(false);
+
   function handleBurgerClick() {
     setIsSidebarOpen(true);
   }
@@ -61,6 +65,11 @@ function App() {
 
   function handleServerError(err) {
     setServerErrMsg(err);
+    // console.log(serverErrMsg);
+  }
+
+  function resetServerError() {
+    setIsError(false);
   }
 
   //Получаем данные пользователя и сохраненные фильмы
@@ -97,7 +106,6 @@ function App() {
           .catch((err) => console.log(err));
       }
     }
-
     checkToken();
   }, [loggedIn, history]);
 
@@ -110,7 +118,9 @@ function App() {
         handleLoginFormSubmit({ email, password });
       })
       .catch((err) => {
+        // console.log(err);
         handleServerError(err);
+        setCustomErr("При регистрации пользователя произошла ошибка.");
       })
       .finally(() => {
         setIsLoading(false);
@@ -122,13 +132,15 @@ function App() {
     setIsLoading(true);
     auth
       .signIn({ email, password })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+        // console.log(res);
         setLoggedIn(true);
         history.push("/movies");
       })
       .catch((err) => {
+        console.log(err);
         handleServerError(err);
+        setCustomErr("При авторизации произошла ошибка.");
       })
       .finally(() => {
         setIsLoading(false);
@@ -144,7 +156,11 @@ function App() {
         // console.log(user)
         setCurrentUser(user);
       })
-      .catch((err) => handleServerError(err))
+      .catch((err) => {
+        handleServerError(err);
+        setCustomErr("При обновлении профиля произошла ошибка.");
+        setIsError(true)
+      })
       .finally(() => setIsLoading(false));
   }
 
@@ -207,11 +223,7 @@ function App() {
     api
       .saveMovieCard(movie)
       .then((savedCard) => {
-        // console.log("я ответ от апи");
-        // console.log(savedCard);
         setSavedMovies([...savedMovies, savedCard]);
-        // console.log("а мы - стейт");
-        // console.log(savedMovies);
         setFoundSavedMovies([...savedMovies, savedCard]);
       })
       .catch((err) => console.log(`Добавление карточки: ${err}`))
@@ -290,7 +302,7 @@ function App() {
       <div className="page">
         <Switch>
           <Route path="/" exact>
-            <Main loggedIn={loggedIn} handleBurgerClick={handleBurgerClick}/>
+            <Main loggedIn={loggedIn} handleBurgerClick={handleBurgerClick} />
           </Route>
 
           <ProtectedRoute
@@ -351,6 +363,10 @@ function App() {
             handleUpdateUser={handleUpdateUser}
             isLoading={isLoading}
             serverErrMsg={serverErrMsg}
+            customErr={customErr}
+            setIsError={setIsError}
+            isError={isError}
+            resetServerError={resetServerError}
           />
 
           <Route path="/signup">
@@ -361,6 +377,7 @@ function App() {
                 isLoading={isLoading}
                 onSubmit={handleRegister}
                 serverErrMsg={serverErrMsg}
+                customErr={customErr}
               />
             )}
           </Route>
@@ -373,6 +390,7 @@ function App() {
                 isLoading={isLoading}
                 onSubmit={handleLoginFormSubmit}
                 serverErrMsg={serverErrMsg}
+                customErr={customErr}
               />
             )}
           </Route>

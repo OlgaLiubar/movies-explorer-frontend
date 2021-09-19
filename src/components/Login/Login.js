@@ -3,7 +3,7 @@ import React from "react";
 import { useFormWithValidation } from "../../hooks/useForm";
 import AuthForm from "../AuthForm/AuthForm";
 
-export default function Login({ onSubmit, isLoading, serverErrMsg }) {
+export default function Login({ onSubmit, isLoading, serverErrMsg, customErr }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
 
   // console.log(values)
@@ -29,6 +29,7 @@ export default function Login({ onSubmit, isLoading, serverErrMsg }) {
       isLoading={isLoading}
       values={values}
       serverErrMsg={serverErrMsg}
+      customErr={customErr}
     />
   );
 }

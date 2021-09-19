@@ -27,6 +27,7 @@
 .profile__inputs {
   margin: 0;
   padding: 0;
+  padding-bottom: 190px;
 }
 
 .profile__label {
@@ -84,7 +85,7 @@
 .profile__submit-btn {
   font-size: 13px;
   line-height: 16px;
-  margin: 205px 0 16px;
+  margin-bottom: 16px;
   padding: 0;
 
   border: none;

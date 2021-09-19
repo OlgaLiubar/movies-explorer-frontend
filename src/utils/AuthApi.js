@@ -41,8 +41,6 @@ class Auth {
         })
             .then(this._checkResponse)
             .then((data) => {
-                console.log("где токен")
-                console.log(data)
                 // сохраняем токен
                 localStorage.setItem('token', data.token);
                 return data;
