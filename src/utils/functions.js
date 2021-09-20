@@ -1,14 +1,34 @@
-function filterMovies(movies, query) {
+// function filterMovies(movies, query) {
+//   let filteredMovies = [];
+
+//   if (movies) {
+//     // console.log(movies);
+//     filteredMovies = movies.filter((movie) => {
+//       console.log(movie);
+//       return movie.nameRU.toUpperCase().includes(query.toUpperCase());
+//     });
+//     return filteredMovies;
+//   }
+// }
+
+function filterMovies(localMoviesArr, query, checkedForshortFilms) {
   let filteredMovies = [];
 
-  if (movies) {
+  //возьми массив с фильмами, запиши в новый массив только отфильтрованные по запросу
+  if (localMoviesArr) {
     // console.log(movies);
-    filteredMovies = movies.filter((movie) => {
-      console.log(movie);
+    filteredMovies = localMoviesArr.filter((movie) => {
+      // console.log(movie);
       return movie.nameRU.toUpperCase().includes(query.toUpperCase());
     });
-    return filteredMovies;
   }
+  //если мы знаем, что нужны короткие, то возьми массив, отфильтрованный по слову, и отфильтруй
+  //его по длительности
+  if (checkedForshortFilms) {
+    filteredMovies = filteredMovies.filter((movie) => movie.duration <= 40);
+  }
+  //верни отфильтрованный массив
+  return filteredMovies;
 }
 
 function getTimeFromMins(mins) {

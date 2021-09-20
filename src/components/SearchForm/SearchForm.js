@@ -2,29 +2,51 @@
 import React from "react";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import PropTypes from "prop-types";
+import { useFormWithValidation } from "../../hooks/useForm";
 
-export default function SearchForm({ handleMovieSearch, isShortFilm, handleCheck, resetShownMovies }) {
-  const [query, setQuery] = React.useState("");
+export default function SearchForm({
+  handleMovieSearch,
+  handleCheck,
+  // resetShownMovies,
+  isCheckedForShortFilms,
+  localArr,
+  savedMovies
+}) {
+
+////////
+const { values, handleChange, isValid } = useFormWithValidation({});
+const [isError, setIsError] = React.useState(false);
+console.log(isError)
+// const styleError = isError
+  // ? "form__error_visible form__error"
+  // : "form__error";
+/////////
 
   const handleChangeInput = (evt) => {
-    setQuery(evt.target.value);
-  }
+    handleChange(evt);
+    setIsError(false);
+  };
 
-  console.log(query);
-  
-//нажимаем на поиск, записываем запрос в стейт, ищем фильмы по запросу
   function handleSubmit(evt) {
-    evt.preventDefault();
-    if(query.length == 0) {
-      resetShownMovies()
+    setIsError(false);
+    if(evt) {
+      evt.preventDefault();
     }
-    handleMovieSearch(query);
-    setQuery("");
+    if (!isValid) {
+      setIsError(true);
+    } else if (!savedMovies) {
+      handleMovieSearch(values.input, localArr);
+      localStorage.setItem("queryM", values.input);
+    } else if (savedMovies) {
+      localStorage.setItem("querySM", values.input);
+      return handleMovieSearch(values.input, localArr);
+    }
+    return;
   }
 
   return (
     <section className="search">
-      <form className="search__form" onSubmit={handleSubmit}>
+      <form className="search__form" noValidate onSubmit={handleSubmit}>
         <div className="search__container">
           <input
             className="search__input"
@@ -40,7 +62,9 @@ export default function SearchForm({ handleMovieSearch, isShortFilm, handleCheck
             id="search__button"
           />
         </div>
-        <FilterCheckbox isShortFilm={isShortFilm} handleCheck={handleCheck}/>
+        <FilterCheckbox 
+        handleCheck={handleCheck} 
+        isCheckedForShortFilms={isCheckedForShortFilms}/>
       </form>
     </section>
   );

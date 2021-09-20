@@ -12,36 +12,38 @@ export default function SavedMovies({
   handleBurgerClick,
   savedCards,
   loggedIn,
-  isSavedMovie,
+  // isSavedMovie,
   onDeleteMovie,
-  handleSavedMovieSearch,
+  // handleSavedMovieSearch,
+  handleMovieSearch,
   isCheckedForShortFilms,
-  filterShortFilms,
+  // filterShortFilms,
   handleCheck,
-  resetShownMovies,
+  // resetShownMovies,
   setMaxNumberOfMovies, 
   maxNumberOfMovies,
   setStep,
   step
 }) {
 
-  console.log(`а вот и карточки:${savedCards}`);
-
   return (
     <>
       <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
       <section className="saved-movies">
         <SearchForm     
-          handleMovieSearch={handleSavedMovieSearch}
+          handleMovieSearch={handleMovieSearch}
           handleCheck={handleCheck}
-          resetShownMovies={resetShownMovies}
+          isCheckedForShortFilms={isCheckedForShortFilms}
+          savedMovies={true}
+          localArr={localStorage.savedMovies}
           />
         {isLoading && <Preloader/>}
       {(savedCards.length === 0 && !isCheckedForShortFilms)
       && <p className="no-saved-movies">У вас пока нет сохраненных фильмов</p>}
           <MoviesCardList
-            cardList={filterShortFilms(savedCards)}
-            isSavedMovie={isSavedMovie}
+            // cardList={filterShortFilms(savedCards)}
+            cardList={savedCards}
+            // isSavedMovie={isSavedMovie}
             onDeleteMovie={onDeleteMovie}
             setMaxNumberOfMovies={setMaxNumberOfMovies}
             maxNumberOfMovies={maxNumberOfMovies}

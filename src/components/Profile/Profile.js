@@ -17,7 +17,6 @@ export default function Profile({
   loggedIn,
   customErr,
   serverErrMsg,
-  // setIsError,
   isError,
   resetServerError,
 }) {
@@ -134,7 +133,11 @@ export default function Profile({
                     serverErrMsg={serverErrMsg}
                     customErr={customErr}
                   />
-                  <FormButton btnName="Сохранить" isError={isError} isValid={isValid} />
+                  <FormButton
+                    btnName="Сохранить"
+                    isError={isError}
+                    isValid={isValid}
+                  />
                 </>
               )}
             </>

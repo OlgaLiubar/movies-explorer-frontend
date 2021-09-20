@@ -7,7 +7,7 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Preloader from "../Preloader/Preloader";
 import PropTypes from "prop-types";
-import MovieNotFound from "../MovieNotFound/MovieNotFound";
+// import MovieNotFound from "../MovieNotFound/MovieNotFound";
 
 export default function Movies({
   handleBurgerClick,
@@ -18,15 +18,20 @@ export default function Movies({
   isLoading,
   isSavedMovie,
   isCheckedForShortFilms,
-  filterShortFilms,
   handleCheck,
-  resetShownMovies,
+  // resetShownMovies,
   setMaxNumberOfMovies, 
   maxNumberOfMovies,
   setStep,
-  step
+  step,
+  savedMovies,
+  foundMovies
 }) {
 
+  // React.useEffect(() => () => {
+  //   resetShownMovies();
+  // }, []);
+  
   return (
     <>
       <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
@@ -34,20 +39,25 @@ export default function Movies({
         <SearchForm
           handleMovieSearch={handleMovieSearch}
           handleCheck={handleCheck}
-          resetShownMovies={resetShownMovies}
+          // resetShownMovies={resetShownMovies}
+          isCheckedForShortFilms={isCheckedForShortFilms}
+          localArr={localStorage.movies}
         />
         {isLoading && <Preloader />}
-        {filterShortFilms(cards).length === 0 &&
-          isCheckedForShortFilms &&
-          !isLoading && <MovieNotFound />}
+        {/* {filterShortFilms(cards).length === 0 &&
+          // isCheckedForShortFilms &&
+          !isLoading && <MovieNotFound />} */}
         <MoviesCardList
-          cardList={filterShortFilms(cards)}
+          cardList={cards}
           onSaveMovie={onSaveMovie}
           isSavedMovie={isSavedMovie}
           setMaxNumberOfMovies={setMaxNumberOfMovies}
           maxNumberOfMovies={maxNumberOfMovies}
           setStep={setStep}
           step={step}
+          savedMovies={savedMovies}
+          foundMovies={foundMovies}
+          allMovies={true}
         />
       </section>
       <Footer />

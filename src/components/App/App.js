@@ -23,7 +23,7 @@ import getNumberOfMovies from "../../utils/getNumberOfMovies";
 
 // const MOVIES_API_URL = "https://api.nomoreparties.co";
 
-function App() {
+export default function App() {
   const history = useHistory();
   const [currentUser, setCurrentUser] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
@@ -48,7 +48,9 @@ function App() {
   const [isCheckedForShortFilms, setIsCheckedForShortFilms] = React.useState(
     false
   );
-  const [isShortFilm, setIsShortFilm] = React.useState(false);
+  const [isCheckedForSavedShortFilms, setIsCheckedForSavedShortFilms] = React.useState(
+    false
+  );
 
   //ошибки
   const [customErr, setCustomErr] = React.useState("");
@@ -72,26 +74,56 @@ function App() {
     setIsError(false);
   }
 
-  //Получаем данные пользователя и сохраненные фильмы
+  //получи данные пользователя с сервера, когда я скажу, и запиши в current user
+  function getUserData() {
+    api
+      .getUserData()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+      .catch((err) => {
+        // getMessageForUser(err);
+        console.log(`${err}`);
+      });
+  }
+
+  //при логине получи сохраненные карточки с сервера, запиши их в стейт и в локальное хранилище
+  //setAllSavedMovies = setSavedMovies
   React.useEffect(() => {
     if (loggedIn) {
-      Promise.all([api.getUserData(), api.getSavedMovies()])
-        .then(([userData, savedMovies]) => {
-          setCurrentUser(userData);
-          if (savedMovies) {
-            //записываем сохраненные фильмы(с апи) в сохраненные фильмы
-            setSavedMovies(savedMovies);
-            setFoundSavedMovies(savedMovies);
-            //записываем сохраненные фильмы(с апи) в локальное хранилище
-            localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
-          }
+      api
+        .getSavedMovies()
+        .then((savedMovies) => {
+          setSavedMovies(savedMovies);
+          //записываем сохраненные фильмы(с апи) в локальное хранилище
+          localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
         })
         .catch((err) => {
-          handleServerError(err);
+          console.log(`${err}`);
         });
     }
   }, [loggedIn]);
 
+  //при логине получи данные пользователя с сервера, запиши в current user 
+  React.useEffect(() => {
+    setIsLoading(true);
+    if (loggedIn) {
+      api
+      .getUserData()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+        .catch((err) => {
+          // getMessageForUser(err);
+          console.log(`${err}`);
+        })
+        .finally(() => setIsLoading(false));
+    } else {
+      setIsLoading(false);
+    }
+  }, []);
+
+//при логине проверь токен и запиши его в локальное хранилище
   React.useEffect(() => {
     function checkToken() {
       const jwt = localStorage.getItem("token");
@@ -107,9 +139,9 @@ function App() {
       }
     }
     checkToken();
-  }, [loggedIn, history]);
+  }, [loggedIn]);
 
-  //Обработчик сабмита формы регистрации
+  //Обработчик сабмита формы регистрации: Когда пользователь отправит форму регистрации, зарегистрируй его и залогинь
   function handleRegister({ name, email, password }) {
     setIsLoading(true);
     auth
@@ -127,13 +159,15 @@ function App() {
       });
   }
 
-  //Обработчик сабмита формы входа
+  //Обработчик сабмита формы входа: когда пользователь разлогинился, а потом отправил форму входа,
+  //получи его данные пользователя, залогинь, и перейди на "фильмы"
   function handleLoginFormSubmit({ email, password }) {
     setIsLoading(true);
     auth
       .signIn({ email, password })
       .then(() => {
         // console.log(res);
+        getUserData();
         setLoggedIn(true);
         history.push("/movies");
       })
@@ -154,12 +188,13 @@ function App() {
       .uploadUserInfo({ name, email })
       .then((user) => {
         // console.log(user)
+        //здесь должно быть сообщение про успешное обновление
         setCurrentUser(user);
       })
       .catch((err) => {
         handleServerError(err);
         setCustomErr("При обновлении профиля произошла ошибка.");
-        setIsError(true)
+        setIsError(true);
       })
       .finally(() => setIsLoading(false));
   }
@@ -170,107 +205,138 @@ function App() {
     history.push("/");
   }
 
-  function handleMovieSearch(query) {
-    getMovies(query);
-  }
-
-  function handleSavedMovieSearch(query) {
-    setFoundSavedMovies(filterMovies(savedMovies, query));
-  }
-
-  function resetShownMovies() {
-    setFoundSavedMovies(savedMovies);
-    setFoundMovies([]);
-  }
-
-  function getMovies(query) {
-    setIsLoading(true);
-    const localMovies = JSON.parse(localStorage.getItem("movies"));
-    if (localMovies) {
-      setFoundMovies(filterMovies(localMovies, query));
-      localStorage.setItem(
-        "foundMovies",
-        JSON.stringify(filterMovies(localMovies, query))
+  //я передам тебе ключевое слово и массив с карточками из локального хранилища, отфильтруй их
+  //по ключевому слову и по длительности
+  function handleMovieSearch(query, localArr) {
+    if (localArr === localStorage.movies) {
+      const filteredMovies = filterMovies(
+        JSON.parse(localArr),
+        query,
+        isCheckedForShortFilms
       );
-      setIsLoading(false);
+      // notFoundMovies(filteredMovies);
+      setFoundMovies(filteredMovies);
     } else {
-      moviesApi
-        .getMovies()
-        .then((moviesData) => {
-          if (moviesData) {
-            localStorage.setItem("movies", JSON.stringify(moviesData));
-            setFoundMovies(filterMovies(moviesData, query));
-            localStorage.setItem(
-              "foundMovies",
-              JSON.stringify(filterMovies(moviesData, query))
-            );
-            setIsLoading(false);
-          } else {
-            setIsLoading(false);
-            throw new Error("Ошибка при получении фильмов");
-          }
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          console.log(error);
-        });
+      const filteredMovies = filterMovies(
+        JSON.parse(localArr),
+        query,
+        isCheckedForSavedShortFilms
+      );
+      // notFoundSavedMovies(filteredMovies);
+      setFoundSavedMovies(filteredMovies);
     }
   }
 
-  //Обработчик сохранения найденного фильма
+  //когда я нажму чекбокс в Movies, если в локальном хранилище уже есть фильмы и есть ключевое слово
+  //со страницы с фильмами, передай их в функцию фильтрации, запиши результат
+  //в стейт с фильмами для отрисовки
+  React.useEffect(() => {
+    if (localStorage.movies && localStorage.queryM) {
+      const filteredMovies = filterMovies(
+        JSON.parse(localStorage.movies),
+        localStorage.queryM,
+        isCheckedForShortFilms
+      );
+      // notFoundMovies(filteredMovies);
+      setFoundMovies(filteredMovies);
+    }
+    return;
+  }, [isCheckedForShortFilms]);
+
+  //когда я нажму чекбокс в SavedMovies, если в локальном хранилище уже есть сохраненные фильмы, и есть ключевое слово
+  //со страницы с сохраненными фильмами, передай их в функцию фильтрации, запиши результат
+  //в стейт с фильмами для отрисовки
+  React.useEffect(() => {
+    if (localStorage.savedMovies && localStorage.querySM) {
+      const filteredMovies = filterMovies(
+        JSON.parse(localStorage.savedMovies),
+        localStorage.querySM,
+        isCheckedForSavedShortFilms
+      );
+      // notFoundSavedMovies(filteredMovies);
+      setFoundSavedMovies(filteredMovies);
+    }
+    return;
+  }, [isCheckedForSavedShortFilms]);
+
+  //при логине, если в локальном хранилище нет массива с фильмами, запроси его с сервера
+  //и запиши в локальное хранилище
+  React.useEffect(() => {
+    setIsLoading(true);
+    if (!localStorage.movies) {
+      moviesApi
+      .getMovies()
+        .then((moviesData) => {
+          localStorage.setItem("movies", JSON.stringify(moviesData));
+        })
+        .catch((err) => {
+          // getMessageForUser(err);
+          console.log(`${err}`);
+        })
+        .finally(() => setIsLoading(false));
+    }
+  }, [loggedIn]);
+
+  //когда я скажу, запроси на сервере сохраненные фильмы, запиши их в стейт и в локальное хранилище
+  function getSavedMovies() {
+    setIsLoading(true);
+    api.getSavedMovies()
+    .then((savedMovies) => {
+      setSavedMovies(savedMovies);
+      localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
+    })
+      .catch((err) => {
+        // getMessageForUser(err);
+        console.log(`${err}`);
+      })
+      .finally(() => setIsLoading(false));
+    }
+
+  //Обработчик сохранения найденного фильма: когда я нажму "сохранить" на карточке, запиши ее в сохраненные
+  //фильмы на сервер, потом добавь ее в стейт с сохраненными фильмами, в локальное хранилище,
+  //и в стейт с сохраненными фильмами, которые нужно отрисовать
   function handleSaveMovie(movie) {
     // setIsLoading(true);
     api
       .saveMovieCard(movie)
       .then((savedCard) => {
-        setSavedMovies([...savedMovies, savedCard]);
-        setFoundSavedMovies([...savedMovies, savedCard]);
+        getSavedMovies();
+        setFoundSavedMovies([...foundSavedMovies, savedCard]);
       })
       .catch((err) => console.log(`Добавление карточки: ${err}`))
       .finally(() => console.log("Уф, сохранили!"));
   }
-
-  //обновляем локальное хранилище при добавлении сохраненной карточки
-  React.useEffect(() => {
-    localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
-  }, [savedMovies]);
 
   //Проверяем по id, есть ли фильм в сохраненных
   function isSavedMovie(card) {
     return savedMovies.find((item) => item.id === card.id);
   }
 
-  //Обработчик удаления карточки из сохраненных
+  //Обработчик удаления карточки из сохраненных:
+  //удали в сохраненных на сервере, удали из массива для отрисовки, обнови  стейт и локальное хранилище
   function handleRemoveSavedMovie(movieId) {
     api
       .deleteMovie(movieId)
       .then((deletedMovie) => {
-        if (!deletedMovie) {
-          throw new Error("При удалении фильма произошла ошибка");
-        } else {
-          const newSavedMovies = savedMovies.filter(
+          const newSavedMovies = foundSavedMovies.filter(
             (movie) => movie.id !== deletedMovie.data.id
           );
-          setSavedMovies(newSavedMovies);
           setFoundSavedMovies(newSavedMovies);
-        }
+          getSavedMovies();
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  //если чекбокс отмечен, ищем в массиве с фильмами короткометражки
-  function filterShortFilms(moviesArr) {
-    return moviesArr.filter((movie) =>
-      isShortFilm ? movie.duration <= 40 : true
-    );
+function handleCheckMovies() {
+    setIsCheckedForShortFilms(!isCheckedForShortFilms);
   }
 
-  function handleCheck() {
-    setIsCheckedForShortFilms(true);
-    setIsShortFilm(!isShortFilm);
+  function handleCheckSavedMovies() {
+    setIsCheckedForSavedShortFilms(!isCheckedForSavedShortFilms);
   }
+
 
   //для изменения ширины окна
   //Если мы меняем размер окна, запиши в setWidth новую ширину
@@ -315,24 +381,20 @@ function App() {
             isLoading={isLoading}
             onSaveMovie={handleSaveMovie}
             isSavedMovie={isSavedMovie}
-            setIsCheckedForShortFilms={setIsCheckedForShortFilms}
             isCheckedForShortFilms={isCheckedForShortFilms}
-            isShortFilm={isShortFilm}
-            setIsShortFilm={setIsShortFilm}
-            filterShortFilms={filterShortFilms}
-            handleCheck={handleCheck}
-            resetShownMovies={resetShownMovies}
+            handleCheck={handleCheckMovies}
             width={width}
             setMaxNumberOfMovies={setMaxNumberOfMovies}
             maxNumberOfMovies={maxNumberOfMovies}
             setStep={setStep}
             step={step}
+            savedMovies={savedMovies}
           />
 
           <ProtectedRoute
             path="/saved-movies"
             component={SavedMovies}
-            handleSavedMovieSearch={handleSavedMovieSearch}
+            handleMovieSearch={handleMovieSearch}
             handleBurgerClick={handleBurgerClick}
             savedCards={foundSavedMovies}
             loggedIn={loggedIn}
@@ -342,11 +404,7 @@ function App() {
             onDeleteMovie={handleRemoveSavedMovie}
             setIsCheckedForShortFilms={setIsCheckedForShortFilms}
             isCheckedForShortFilms={isCheckedForShortFilms}
-            isShortFilm={isShortFilm}
-            setIsShortFilm={setIsShortFilm}
-            filterShortFilms={filterShortFilms}
-            handleCheck={handleCheck}
-            resetShownMovies={resetShownMovies}
+            handleCheck={handleCheckSavedMovies}
             width={width}
             setMaxNumberOfMovies={setMaxNumberOfMovies}
             maxNumberOfMovies={maxNumberOfMovies}
@@ -364,7 +422,7 @@ function App() {
             isLoading={isLoading}
             serverErrMsg={serverErrMsg}
             customErr={customErr}
-            setIsError={setIsError}
+            // setIsError={setIsError}
             isError={isError}
             resetServerError={resetServerError}
           />
@@ -404,5 +462,3 @@ function App() {
     </CurrentUserContext.Provider>
   );
 }
-
-export default App;
