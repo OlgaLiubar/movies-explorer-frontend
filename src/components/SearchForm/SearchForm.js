@@ -7,20 +7,15 @@ import { useFormWithValidation } from "../../hooks/useForm";
 export default function SearchForm({
   handleMovieSearch,
   handleCheck,
-  // resetShownMovies,
   isCheckedForShortFilms,
   localArr,
-  savedMovies
+  savedMov,
 }) {
 
-////////
-const { values, handleChange, isValid } = useFormWithValidation({});
-const [isError, setIsError] = React.useState(false);
-console.log(isError)
-// const styleError = isError
-  // ? "form__error_visible form__error"
-  // : "form__error";
-/////////
+  const { values, handleChange, isValid } = useFormWithValidation({});
+  const [isError, setIsError] = React.useState(false);
+  // console.log(isError)
+  const errorSelector = isError ? "error error_centered" : "error_invisible";
 
   const handleChangeInput = (evt) => {
     handleChange(evt);
@@ -29,16 +24,17 @@ console.log(isError)
 
   function handleSubmit(evt) {
     setIsError(false);
-    if(evt) {
+    if (evt) {
       evt.preventDefault();
     }
     if (!isValid) {
       setIsError(true);
-    } else if (!savedMovies) {
+    } else if (!savedMov) {
       handleMovieSearch(values.input, localArr);
       localStorage.setItem("queryM", values.input);
-    } else if (savedMovies) {
+    } else if (savedMov) {
       localStorage.setItem("querySM", values.input);
+      // console.log(localArr);
       return handleMovieSearch(values.input, localArr);
     }
     return;
@@ -46,6 +42,7 @@ console.log(isError)
 
   return (
     <section className="search">
+<span className={errorSelector}>Нужно ввести ключевое слово</span>
       <form className="search__form" noValidate onSubmit={handleSubmit}>
         <div className="search__container">
           <input
@@ -62,9 +59,10 @@ console.log(isError)
             id="search__button"
           />
         </div>
-        <FilterCheckbox 
-        handleCheck={handleCheck} 
-        isCheckedForShortFilms={isCheckedForShortFilms}/>
+        <FilterCheckbox
+          handleCheck={handleCheck}
+          isCheckedForShortFilms={isCheckedForShortFilms}
+        />
       </form>
     </section>
   );

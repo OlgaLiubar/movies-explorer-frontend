@@ -19,6 +19,7 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 import { filterMovies } from "../../utils/functions";
 import getNumberOfMovies from "../../utils/getNumberOfMovies";
+import { SUCCESS_MSG } from "../../utils/constants";
 // import Preloader from "../Preloader/Preloader";
 
 // const MOVIES_API_URL = "https://api.nomoreparties.co";
@@ -56,6 +57,13 @@ export default function App() {
   const [customErr, setCustomErr] = React.useState("");
   const [serverErrMsg, setServerErrMsg] = React.useState("");
   const [isError, setIsError] = React.useState(false);
+
+  const [isNotFound, setIsNotFound] = React.useState(false);
+  const [isNotFoundSaved, setIsNotFoundSaved] = React.useState(false);
+
+  const [successMsg, setSuccessMsg] = React.useState('');
+
+  // console.log(loggedIn);
 
   function handleBurgerClick() {
     setIsSidebarOpen(true);
@@ -99,6 +107,7 @@ export default function App() {
           localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
         })
         .catch((err) => {
+          //здесь нужно длинное сообщение 
           console.log(`${err}`);
         });
     }
@@ -114,14 +123,13 @@ export default function App() {
         setCurrentUser(res);
       })
         .catch((err) => {
-          // getMessageForUser(err);
-          console.log(`${err}`);
+          console.log(err);
         })
         .finally(() => setIsLoading(false));
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [loggedIn]);
 
 //при логине проверь токен и запиши его в локальное хранилище
   React.useEffect(() => {
@@ -139,7 +147,7 @@ export default function App() {
       }
     }
     checkToken();
-  }, [loggedIn]);
+  }, []);
 
   //Обработчик сабмита формы регистрации: Когда пользователь отправит форму регистрации, зарегистрируй его и залогинь
   function handleRegister({ name, email, password }) {
@@ -147,7 +155,7 @@ export default function App() {
     auth
       .register(name, email, password)
       .then(() => {
-        handleLoginFormSubmit({ email, password });
+        handleLogin({ email, password });
       })
       .catch((err) => {
         // console.log(err);
@@ -161,12 +169,11 @@ export default function App() {
 
   //Обработчик сабмита формы входа: когда пользователь разлогинился, а потом отправил форму входа,
   //получи его данные пользователя, залогинь, и перейди на "фильмы"
-  function handleLoginFormSubmit({ email, password }) {
+  function handleLogin({ email, password }) {
     setIsLoading(true);
     auth
       .signIn({ email, password })
       .then(() => {
-        // console.log(res);
         getUserData();
         setLoggedIn(true);
         history.push("/movies");
@@ -187,8 +194,7 @@ export default function App() {
     api
       .uploadUserInfo({ name, email })
       .then((user) => {
-        // console.log(user)
-        //здесь должно быть сообщение про успешное обновление
+        setSuccessMsg(SUCCESS_MSG);
         setCurrentUser(user);
       })
       .catch((err) => {
@@ -200,6 +206,8 @@ export default function App() {
   }
 
   function handleLogOut() {
+    setFoundMovies([]);
+    setFoundSavedMovies([]);
     setLoggedIn(false);
     localStorage.clear();
     history.push("/");
@@ -214,7 +222,7 @@ export default function App() {
         query,
         isCheckedForShortFilms
       );
-      // notFoundMovies(filteredMovies);
+      handleNoFoundMovies(filteredMovies);
       setFoundMovies(filteredMovies);
     } else {
       const filteredMovies = filterMovies(
@@ -222,8 +230,25 @@ export default function App() {
         query,
         isCheckedForSavedShortFilms
       );
-      // notFoundSavedMovies(filteredMovies);
-      setFoundSavedMovies(filteredMovies);
+      console.log(filteredMovies)
+      handleNoFoundSavedMovies(filteredMovies);
+      return setFoundSavedMovies(filteredMovies);
+    }
+  }
+
+  function handleNoFoundMovies(filteredMovies) {
+    if (filteredMovies.length == 0) {
+      setIsNotFound(true);
+    } else {
+      setIsNotFound(false);
+    }
+  }
+
+  function handleNoFoundSavedMovies(filteredMovies) {
+    if (filteredMovies.length  == 0) {
+      setIsNotFoundSaved(true);
+    } else {
+      setIsNotFoundSaved(false);
     }
   }
 
@@ -237,7 +262,7 @@ export default function App() {
         localStorage.queryM,
         isCheckedForShortFilms
       );
-      // notFoundMovies(filteredMovies);
+      handleNoFoundMovies(filteredMovies);
       setFoundMovies(filteredMovies);
     }
     return;
@@ -253,7 +278,7 @@ export default function App() {
         localStorage.querySM,
         isCheckedForSavedShortFilms
       );
-      // notFoundSavedMovies(filteredMovies);
+      handleNoFoundSavedMovies(filteredMovies);
       setFoundSavedMovies(filteredMovies);
     }
     return;
@@ -266,12 +291,18 @@ export default function App() {
     if (!localStorage.movies) {
       moviesApi
       .getMovies()
-        .then((moviesData) => {
-          localStorage.setItem("movies", JSON.stringify(moviesData));
-        })
+      .then((res) => {
+        const movies = res.map((movie) => {
+          return {
+            ...movie,
+            movieId: movie.id,
+          };
+        });
+        localStorage.setItem("movies", JSON.stringify(movies));
+      })
         .catch((err) => {
-          // getMessageForUser(err);
-          console.log(`${err}`);
+          //здесь нужно длинное сообщение об ошибке
+          console.log(err);
         })
         .finally(() => setIsLoading(false));
     }
@@ -286,8 +317,8 @@ export default function App() {
       localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
     })
       .catch((err) => {
-        // getMessageForUser(err);
-        console.log(`${err}`);
+        //здесь нужно длинное сообщение об ошибке
+        console.log(err);
       })
       .finally(() => setIsLoading(false));
     }
@@ -296,7 +327,6 @@ export default function App() {
   //фильмы на сервер, потом добавь ее в стейт с сохраненными фильмами, в локальное хранилище,
   //и в стейт с сохраненными фильмами, которые нужно отрисовать
   function handleSaveMovie(movie) {
-    // setIsLoading(true);
     api
       .saveMovieCard(movie)
       .then((savedCard) => {
@@ -309,7 +339,7 @@ export default function App() {
 
   //Проверяем по id, есть ли фильм в сохраненных
   function isSavedMovie(card) {
-    return savedMovies.find((item) => item.id === card.id);
+    return savedMovies.find((item) => item.movieId === card.id);
   }
 
   //Обработчик удаления карточки из сохраненных:
@@ -389,6 +419,7 @@ function handleCheckMovies() {
             setStep={setStep}
             step={step}
             savedMovies={savedMovies}
+            notFound={isNotFound}
           />
 
           <ProtectedRoute
@@ -396,20 +427,20 @@ function handleCheckMovies() {
             component={SavedMovies}
             handleMovieSearch={handleMovieSearch}
             handleBurgerClick={handleBurgerClick}
-            savedCards={foundSavedMovies}
+            foundSavedMovies={foundSavedMovies}
+            savedMovies={savedMovies}
             loggedIn={loggedIn}
             isLoading={isLoading}
-            setSavedMovies={setSavedMovies}
-            isSavedMovie={isSavedMovie}
             onDeleteMovie={handleRemoveSavedMovie}
-            setIsCheckedForShortFilms={setIsCheckedForShortFilms}
-            isCheckedForShortFilms={isCheckedForShortFilms}
+            isCheckedForSavedShortFilms={isCheckedForSavedShortFilms}
             handleCheck={handleCheckSavedMovies}
             width={width}
             setMaxNumberOfMovies={setMaxNumberOfMovies}
             maxNumberOfMovies={maxNumberOfMovies}
             setStep={setStep}
             step={step}
+            isSavedMovie={isSavedMovie}
+            notFound={isNotFoundSaved}
           />
 
           <ProtectedRoute
@@ -422,9 +453,9 @@ function handleCheckMovies() {
             isLoading={isLoading}
             serverErrMsg={serverErrMsg}
             customErr={customErr}
-            // setIsError={setIsError}
             isError={isError}
             resetServerError={resetServerError}
+            successMsg={successMsg}
           />
 
           <Route path="/signup">
@@ -446,7 +477,7 @@ function handleCheckMovies() {
             ) : (
               <Login
                 isLoading={isLoading}
-                onSubmit={handleLoginFormSubmit}
+                onSubmit={handleLogin}
                 serverErrMsg={serverErrMsg}
                 customErr={customErr}
               />

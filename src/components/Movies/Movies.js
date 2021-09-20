@@ -19,18 +19,15 @@ export default function Movies({
   isSavedMovie,
   isCheckedForShortFilms,
   handleCheck,
-  // resetShownMovies,
   setMaxNumberOfMovies, 
   maxNumberOfMovies,
   setStep,
   step,
   savedMovies,
-  foundMovies
+  foundMovies,
+  notFound
 }) {
 
-  // React.useEffect(() => () => {
-  //   resetShownMovies();
-  // }, []);
   
   return (
     <>
@@ -39,14 +36,10 @@ export default function Movies({
         <SearchForm
           handleMovieSearch={handleMovieSearch}
           handleCheck={handleCheck}
-          // resetShownMovies={resetShownMovies}
           isCheckedForShortFilms={isCheckedForShortFilms}
           localArr={localStorage.movies}
         />
         {isLoading && <Preloader />}
-        {/* {filterShortFilms(cards).length === 0 &&
-          // isCheckedForShortFilms &&
-          !isLoading && <MovieNotFound />} */}
         <MoviesCardList
           cardList={cards}
           onSaveMovie={onSaveMovie}
@@ -57,7 +50,8 @@ export default function Movies({
           step={step}
           savedMovies={savedMovies}
           foundMovies={foundMovies}
-          allMovies={true}
+          isLoading={isLoading}
+          notFound={notFound}
         />
       </section>
       <Footer />

@@ -1,11 +1,18 @@
-
 .error {
-    display: inline-block;
-    color: rgba(255, 48, 85, 1);
-    font-size: 11px;
-    line-height: 12px;
-    /* margin-top: 200px; */
-    margin-bottom: 20px;
-    text-align: center;
-    cursor: default;
-  }
+  display: inline-block;
+  color: rgba(255, 48, 85, 1);
+  font-size: 11px;
+  line-height: 12px;
+  /* margin-top: 200px; */
+  margin-bottom: 20px;
+  text-align: center;
+  cursor: default;
+}
+
+.error_centered {
+  text-align: center;
+  width: 100%;
+}
+.error_invisible {
+  visibility: hidden;
+}

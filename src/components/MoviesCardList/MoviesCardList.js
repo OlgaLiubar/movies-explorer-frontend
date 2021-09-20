@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-
+import MovieNotFound from "../MovieNotFound/MovieNotFound";
 import MoviesCard from "../MoviesCard/MoviesCard";
 
 export default function MoviesCardList({
@@ -11,19 +11,20 @@ export default function MoviesCardList({
   setMaxNumberOfMovies,
   maxNumberOfMovies,
   step,
-  // savedMovies,
-  // allMovies,
-  // foundSavedMovies,
+  isLoading,
+  notFound
 }) {
   //увеличивает кол-во карточек на шаг
   function handleMoreBtnClick() {
     return setMaxNumberOfMovies(maxNumberOfMovies + step);
   }
 
+  // console.log(savedMovies);
   const moviesToRender = cardList.slice(0, maxNumberOfMovies);
 
   return (
     <section className="moviesCardList">
+      {notFound && !isLoading && <MovieNotFound />}
       <ul className="moviesCardList__gallery">
         {moviesToRender.map((card) => (
           <MoviesCard

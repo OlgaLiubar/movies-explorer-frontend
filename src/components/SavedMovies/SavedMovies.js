@@ -10,20 +10,19 @@ import PropTypes from "prop-types";
 export default function SavedMovies({
   isLoading,
   handleBurgerClick,
-  savedCards,
+  savedMovies,
   loggedIn,
-  // isSavedMovie,
+  isSavedMovie,
   onDeleteMovie,
-  // handleSavedMovieSearch,
   handleMovieSearch,
-  isCheckedForShortFilms,
-  // filterShortFilms,
+  isCheckedForSavedShortFilms,
   handleCheck,
-  // resetShownMovies,
+  foundSavedMovies,
   setMaxNumberOfMovies, 
   maxNumberOfMovies,
   setStep,
-  step
+  step,
+  notFound
 }) {
 
   return (
@@ -33,22 +32,24 @@ export default function SavedMovies({
         <SearchForm     
           handleMovieSearch={handleMovieSearch}
           handleCheck={handleCheck}
-          isCheckedForShortFilms={isCheckedForShortFilms}
-          savedMovies={true}
+          isCheckedForShortFilms={isCheckedForSavedShortFilms}
+          savedMov={true}
           localArr={localStorage.savedMovies}
           />
         {isLoading && <Preloader/>}
-      {(savedCards.length === 0 && !isCheckedForShortFilms)
-      && <p className="no-saved-movies">У вас пока нет сохраненных фильмов</p>}
+      {/* {(savedCards.length === 0 && !isCheckedForSavedShortFilms)
+      && <p className="no-saved-movies">У вас пока нет сохраненных фильмов</p>} */}
           <MoviesCardList
             // cardList={filterShortFilms(savedCards)}
-            cardList={savedCards}
-            // isSavedMovie={isSavedMovie}
+            cardList={foundSavedMovies}
+            savedMovies={savedMovies}
+            isSavedMovie={isSavedMovie}
             onDeleteMovie={onDeleteMovie}
             setMaxNumberOfMovies={setMaxNumberOfMovies}
             maxNumberOfMovies={maxNumberOfMovies}
             setStep={setStep}
             step={step}
+            notFound={notFound}
           />
       </section>
       <Footer />

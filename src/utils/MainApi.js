@@ -24,7 +24,7 @@ class Api {
       })
         .then(this._checkResponse)
     }
-  
+
     getUserData() {
       return fetch(`${this._url}/users/me`, {
         method: 'GET',
@@ -53,7 +53,7 @@ class Api {
           : movie.trailerLink
           }`,
           thumbnail: `${IMG_BASE_URL}${movie.image.formats.thumbnail.url}`,
-          id: movie.id,
+          movieId: movie.id,
           nameRU: `${movie.nameRU === ('' || null) ? 'no info' : movie.nameRU}`,
           nameEN: `${movie.nameEN === ('' || null) ? 'no info' : movie.nameEN}`,
         })
