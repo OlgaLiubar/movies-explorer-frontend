@@ -17,13 +17,10 @@ import Profile from "../Profile/Profile";
 import Sidebar from "../Sidebar/Sidebar";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
-import { filterMovies } from "../../utils/functions";
+import filterMovies from "../../utils/filterMovies";
 import getNumberOfMovies from "../../utils/getNumberOfMovies";
 import { SUCCESS_MSG } from "../../utils/constants";
 import { FETCH_MOVIES_ERR } from "../../utils/constants";
-// import Preloader from "../Preloader/Preloader";
-
-// const MOVIES_API_URL = "https://api.nomoreparties.co";
 
 export default function App() {
   const history = useHistory();
@@ -33,28 +30,23 @@ export default function App() {
 
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
-  //Карточки с найденными по запросу фильмами
   const [foundMovies, setFoundMovies] = React.useState([]);
   const [foundSavedMovies, setFoundSavedMovies] = React.useState([]);
-
-  //Карточки с сохраненными фильмами
   const [savedMovies, setSavedMovies] = React.useState([]);
 
-  //для ширины окна
   const [width, setWidth] = React.useState(window.innerWidth);
   const [isResizing, setIsResizing] = React.useState(false);
   const [maxNumberOfMovies, setMaxNumberOfMovies] = React.useState(0);
   const [step, setStep] = React.useState(0);
 
-  //для короткометражек
   const [isCheckedForShortFilms, setIsCheckedForShortFilms] = React.useState(
     false
   );
-  const [isCheckedForSavedShortFilms, setIsCheckedForSavedShortFilms] = React.useState(
-    false
-  );
+  const [
+    isCheckedForSavedShortFilms,
+    setIsCheckedForSavedShortFilms,
+  ] = React.useState(false);
 
-  //ошибки
   const [customErr, setCustomErr] = React.useState("");
   const [serverErrMsg, setServerErrMsg] = React.useState("");
   const [isError, setIsError] = React.useState(false);
@@ -62,8 +54,8 @@ export default function App() {
   const [isNotFound, setIsNotFound] = React.useState(false);
   const [isNotFoundSaved, setIsNotFoundSaved] = React.useState(false);
 
-  const [successMsg, setSuccessMsg] = React.useState('');
-  const [fetchErrMsg, setFetchErrMsg] = React.useState('');
+  const [successMsg, setSuccessMsg] = React.useState("");
+  const [fetchErrMsg, setFetchErrMsg] = React.useState("");
 
   function handleBurgerClick() {
     setIsSidebarOpen(true);
@@ -78,11 +70,10 @@ export default function App() {
   }
 
   function resetServerError() {
-    setServerErrMsg('');
-    setCustomErr('');
+    setServerErrMsg("");
+    setCustomErr("");
   }
 
-  //получи данные пользователя с сервера, когда я скажу, и запиши в current user
   function getUserData() {
     api
       .getUserData()
@@ -94,8 +85,6 @@ export default function App() {
       });
   }
 
-  //при логине получи сохраненные карточки с сервера, запиши их в стейт и в локальное хранилище
-  //setAllSavedMovies = setSavedMovies
   React.useEffect(() => {
     if (loggedIn) {
       api
@@ -103,7 +92,6 @@ export default function App() {
         .then((savedMovies) => {
           setSavedMovies(savedMovies);
           setFoundSavedMovies(savedMovies);
-          //записываем сохраненные фильмы(с апи) в локальное хранилище
           localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
         })
         .catch((err) => {
@@ -113,15 +101,14 @@ export default function App() {
     }
   }, [loggedIn]);
 
-  //при логине получи данные пользователя с сервера, запиши в current user 
   React.useEffect(() => {
     setIsLoading(true);
     if (loggedIn) {
       api
-      .getUserData()
-      .then((res) => {
-        setCurrentUser(res);
-      })
+        .getUserData()
+        .then((res) => {
+          setCurrentUser(res);
+        })
         .catch((err) => {
           console.log(err);
         })
@@ -131,7 +118,6 @@ export default function App() {
     }
   }, [loggedIn]);
 
-//при логине проверь токен и запиши его в локальное хранилище
   React.useEffect(() => {
     function checkToken() {
       const jwt = localStorage.getItem("token");
@@ -149,14 +135,13 @@ export default function App() {
     checkToken();
   }, []);
 
-  //Обработчик сабмита формы регистрации: Когда пользователь отправит форму регистрации, зарегистрируй его и залогинь
   function handleRegister({ name, email, password }) {
     setIsLoading(true);
     auth
       .register(name, email, password)
       .then(() => {
         handleLogin({ email, password });
-        resetServerError()
+        resetServerError();
       })
       .catch((err) => {
         handleServerError(err);
@@ -167,8 +152,6 @@ export default function App() {
       });
   }
 
-  //Обработчик сабмита формы входа: когда пользователь разлогинился, а потом отправил форму входа,
-  //получи его данные пользователя, залогинь, и перейди на "фильмы"
   function handleLogin({ email, password }) {
     setIsLoading(true);
     auth
@@ -176,7 +159,7 @@ export default function App() {
       .then(() => {
         getUserData();
         setLoggedIn(true);
-        resetServerError()
+        resetServerError();
         history.push("/movies");
       })
       .catch((err) => {
@@ -188,13 +171,12 @@ export default function App() {
       });
   }
 
-  //Обработчик обновления данных пользовател
   function handleUpdateUser({ name, email }) {
     setIsLoading(true);
     api
       .uploadUserInfo({ name, email })
       .then((user) => {
-        resetServerError()
+        resetServerError();
         setSuccessMsg(SUCCESS_MSG);
         setCurrentUser(user);
       })
@@ -214,8 +196,6 @@ export default function App() {
     history.push("/");
   }
 
-  //я передам тебе ключевое слово и массив с карточками из локального хранилища, отфильтруй их
-  //по ключевому слову и по длительности
   function handleMovieSearch(query, localArr) {
     if (localArr === localStorage.movies) {
       const filteredMovies = filterMovies(
@@ -245,16 +225,13 @@ export default function App() {
   }
 
   function handleNoFoundSavedMovies(filteredMovies) {
-    if (filteredMovies.length  == 0) {
+    if (filteredMovies.length == 0) {
       setIsNotFoundSaved(true);
     } else {
       setIsNotFoundSaved(false);
     }
   }
 
-  //когда я нажму чекбокс в Movies, если в локальном хранилище уже есть фильмы и есть ключевое слово
-  //со страницы с фильмами, передай их в функцию фильтрации, запиши результат
-  //в стейт с фильмами для отрисовки
   React.useEffect(() => {
     if (localStorage.movies && localStorage.queryM) {
       const filteredMovies = filterMovies(
@@ -268,9 +245,6 @@ export default function App() {
     return;
   }, [isCheckedForShortFilms]);
 
-  //когда я нажму чекбокс в SavedMovies, если в локальном хранилище уже есть сохраненные фильмы, и есть ключевое слово
-  //со страницы с сохраненными фильмами, передай их в функцию фильтрации, запиши результат
-  //в стейт с фильмами для отрисовки
   React.useEffect(() => {
     if (localStorage.savedMovies && localStorage.querySM) {
       const filteredMovies = filterMovies(
@@ -286,33 +260,32 @@ export default function App() {
 
   React.useEffect(() => {
     if (localStorage.savedMovies) {
-      if(isCheckedForSavedShortFilms==true){
-      const filteredMovies = JSON.parse(localStorage.savedMovies).filter((movie) => movie.duration <= 40);
-      setFoundSavedMovies(filteredMovies);
-      }
-      else {
+      if (isCheckedForSavedShortFilms == true) {
+        const filteredMovies = JSON.parse(localStorage.savedMovies).filter(
+          (movie) => movie.duration <= 40
+        );
+        setFoundSavedMovies(filteredMovies);
+      } else {
         setFoundSavedMovies(savedMovies);
       }
     }
     return;
   }, [isCheckedForSavedShortFilms]);
 
-  //при логине, если в локальном хранилище нет массива с фильмами, запроси его с сервера
-  //и запиши в локальное хранилище
   React.useEffect(() => {
     setIsLoading(true);
     if (!localStorage.movies) {
       moviesApi
-      .getMovies()
-      .then((res) => {
-        const movies = res.map((movie) => {
-          return {
-            ...movie,
-            movieId: movie.id,
-          };
-        });
-        localStorage.setItem("movies", JSON.stringify(movies));
-      })
+        .getMovies()
+        .then((res) => {
+          const movies = res.map((movie) => {
+            return {
+              ...movie,
+              movieId: movie.id,
+            };
+          });
+          localStorage.setItem("movies", JSON.stringify(movies));
+        })
         .catch((err) => {
           setFetchErrMsg(FETCH_MOVIES_ERR);
           console.log(`${err}`);
@@ -321,24 +294,21 @@ export default function App() {
     }
   }, [loggedIn]);
 
-  //когда я скажу, запроси на сервере сохраненные фильмы, запиши их в стейт и в локальное хранилище
   function getSavedMovies() {
     setIsLoading(true);
-    api.getSavedMovies()
-    .then((savedMovies) => {
-      setSavedMovies(savedMovies);
-      localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
-    })
+    api
+      .getSavedMovies()
+      .then((savedMovies) => {
+        setSavedMovies(savedMovies);
+        localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
+      })
       .catch((err) => {
         setFetchErrMsg(FETCH_MOVIES_ERR);
         console.log(`${err}`);
       })
       .finally(() => setIsLoading(false));
-    }
+  }
 
-  //Обработчик сохранения найденного фильма: когда я нажму "сохранить" на карточке, запиши ее в сохраненные
-  //фильмы на сервер, потом добавь ее в стейт с сохраненными фильмами, в локальное хранилище,
-  //и в стейт с сохраненными фильмами, которые нужно отрисовать
   function handleSaveMovie(movie) {
     api
       .saveMovieCard(movie)
@@ -350,30 +320,27 @@ export default function App() {
       .finally(() => console.log("Уф, сохранили!"));
   }
 
-  //Проверяем по id, есть ли фильм в сохраненных
   function isSavedMovie(card) {
     const savedMovie = savedMovies.find((item) => item.movieId === card.id);
-    return savedMovie
+    return savedMovie;
   }
 
-  //Обработчик удаления карточки из сохраненных:
-  //удали в сохраненных на сервере, удали из массива для отрисовки, обнови  стейт и локальное хранилище
   function handleRemoveSavedMovie(movieId) {
     api
       .deleteMovie(movieId)
       .then((deletedMovie) => {
-          const newSavedMovies = foundSavedMovies.filter(
-            (movie) => movie._id !== deletedMovie.data._id
-          );
-          setFoundSavedMovies(newSavedMovies);
-          getSavedMovies();
+        const newSavedMovies = foundSavedMovies.filter(
+          (movie) => movie._id !== deletedMovie.data._id
+        );
+        setFoundSavedMovies(newSavedMovies);
+        getSavedMovies();
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-function handleCheckMovies() {
+  function handleCheckMovies() {
     setIsCheckedForShortFilms(!isCheckedForShortFilms);
   }
 
@@ -381,9 +348,6 @@ function handleCheckMovies() {
     setIsCheckedForSavedShortFilms(!isCheckedForSavedShortFilms);
   }
 
-
-  //для изменения ширины окна
-  //Если мы меняем размер окна, запиши в setWidth новую ширину
   useLayoutEffect(() => {
     function updateWidth() {
       if (!isResizing) {
@@ -399,8 +363,6 @@ function handleCheckMovies() {
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  //получаем лимит для рендера фильмов и шаг
-
   React.useEffect(() => {
     const { maxNumberOfMovies, step } = getNumberOfMovies(width);
     setMaxNumberOfMovies(maxNumberOfMovies);
@@ -409,13 +371,13 @@ function handleCheckMovies() {
 
   React.useEffect(() => {
     setTimeout(() => {
-      setSuccessMsg('');
+      setSuccessMsg("");
     }, 2000);
   }, [successMsg]);
 
   React.useEffect(() => {
     setTimeout(() => {
-      setSuccessMsg('');
+      setSuccessMsg("");
     }, 2000);
   }, [fetchErrMsg]);
 
@@ -447,7 +409,6 @@ function handleCheckMovies() {
             notFound={isNotFound}
             onDeleteMovie={handleRemoveSavedMovie}
             fetchErrMsg={fetchErrMsg}
-
           />
 
           <ProtectedRoute

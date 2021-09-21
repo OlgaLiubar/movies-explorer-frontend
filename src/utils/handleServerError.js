@@ -1,5 +1,4 @@
 export default function handleServerError(status) {
-  //   console.log(status);
 
   if (status == "Error: 409") {
     return "Пользователь с таким email уже существует.";

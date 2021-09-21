@@ -1,7 +1,4 @@
-// import { MAIN_API_URL, MOVIES_API_URL } from '../config/config';
-const IMG_BASE_URL = "https://api.nomoreparties.co";
-const TRAILER = "https://www.youtube.com/watch?v=Af8Itqfk2l4";
-const REGEX = /http(s)?:\/\/w{0,3}?[a-zA-Z0-9]+[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=]*/;
+import { IMG_BASE_URL, TRAILER, REGEX } from "../utils/constants";
 
 class Api {
   constructor(options) {
@@ -84,8 +81,7 @@ class Api {
 }
 
 const api = new Api({
-  // url: 'https://api.olgaliubar.nomoredomains.club',
-  url: "http://localhost:3000",
+  url: "https://api.olgaliubar.nomoredomains.club",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

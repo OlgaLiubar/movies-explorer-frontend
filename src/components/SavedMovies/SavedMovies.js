@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from "react";
 import Header from "../Header/Header";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
@@ -38,10 +37,7 @@ export default function SavedMovies({
         />
         <p className="movies__error">{fetchErrMsg || ""}</p>
         {isLoading && <Preloader />}
-        {/* {(savedCards.length === 0 && !isCheckedForSavedShortFilms)
-      && <p className="no-saved-movies">У вас пока нет сохраненных фильмов</p>} */}
         <MoviesCardList
-          // cardList={filterShortFilms(savedCards)}
           cardList={foundSavedMovies}
           savedMovies={savedMovies}
           isSavedMovie={isSavedMovie}

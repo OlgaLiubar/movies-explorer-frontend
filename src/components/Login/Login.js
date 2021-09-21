@@ -17,10 +17,6 @@ export default function Login({
     onSubmit(values);
   };
 
-  // React.useEffect(() => () => {
-  //   setIsError(false);
-  // }, []);
-
   return (
     <AuthForm
       title="Рады видеть!"

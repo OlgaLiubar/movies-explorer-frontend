@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import AccountButton from "../AccountButton/AccountButton";
-import PropTypes from "prop-types";
 
 export default function Sidebar({ isOpen, onClose }) {
   const handleOverlayClose = (event) => {
@@ -61,8 +60,3 @@ export default function Sidebar({ isOpen, onClose }) {
     </div>
   );
 }
-
-Sidebar.propTypes = {
-  isOpen: PropTypes.bool,
-  onClose: PropTypes.func,
-};

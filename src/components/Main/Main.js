@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from "react";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
@@ -8,13 +7,13 @@ import Portfolio from "../Portfolio/Portfolio";
 import Promo from "../Promo/Promo";
 import Techs from "../Techs/Techs";
 
-export default function Main({loggedIn, handleBurgerClick}) {
+export default function Main({ loggedIn, handleBurgerClick }) {
   return (
     <>
-      <Header 
-      loggedIn={loggedIn} 
-      headerDark="header_dark"
-      handleBurgerClick={handleBurgerClick}
+      <Header
+        loggedIn={loggedIn}
+        headerDark="header_dark"
+        handleBurgerClick={handleBurgerClick}
       />
       <Promo />
       <AboutProject />

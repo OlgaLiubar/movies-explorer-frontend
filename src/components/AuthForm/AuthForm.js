@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
 import React from "react";
-import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import FormButton from "../FormButton/FormButton";
 import FormError from "../FormError/FormError";
@@ -95,12 +93,3 @@ export default function AuthForm({
     </section>
   );
 }
-
-AuthForm.propTypes = {
-  title: PropTypes.string.isRequired,
-  signUp: PropTypes.bool.isRequired,
-  btnName: PropTypes.string.isRequired,
-  authQuestion: PropTypes.string.isRequired,
-  authLinkTxt: PropTypes.string.isRequired,
-  linkPath: PropTypes.string.isRequired,
-};

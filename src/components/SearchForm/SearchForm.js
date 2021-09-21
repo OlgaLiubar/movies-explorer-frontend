@@ -1,7 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from "react";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
-import PropTypes from "prop-types";
 import { useFormWithValidation } from "../../hooks/useForm";
 
 export default function SearchForm({
@@ -11,7 +9,6 @@ export default function SearchForm({
   localArr,
   savedMov,
 }) {
-
   const { values, handleChange, isValid } = useFormWithValidation({});
   const [isError, setIsError] = React.useState(false);
   const errorSelector = isError ? "error " : "error_invisible";
@@ -33,7 +30,6 @@ export default function SearchForm({
       localStorage.setItem("queryM", values.input);
     } else if (savedMov) {
       localStorage.setItem("querySM", values.input);
-      // console.log(localArr);
       return handleMovieSearch(values.input, localArr);
     }
     return;
@@ -41,7 +37,7 @@ export default function SearchForm({
 
   return (
     <section className="search">
-<span className={errorSelector}>Нужно ввести ключевое слово</span>
+      <span className={errorSelector}>Нужно ввести ключевое слово</span>
       <form className="search__form" noValidate onSubmit={handleSubmit}>
         <div className="search__container">
           <input
@@ -58,15 +54,8 @@ export default function SearchForm({
             id="search__button"
           />
         </div>
-        <FilterCheckbox
-          handleCheck={handleCheck}
-          isShortFilms={isShortFilms}
-        />
+        <FilterCheckbox handleCheck={handleCheck} isShortFilms={isShortFilms} />
       </form>
     </section>
   );
 }
-
-SearchForm.propTypes = {
-  handleSearchClick: PropTypes.func,
-};

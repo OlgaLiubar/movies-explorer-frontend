@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from "react";
 import AuthForm from "../AuthForm/AuthForm";
 import { useFormWithValidation } from "../../hooks/useForm";
@@ -9,7 +8,7 @@ export default function Register({
   isLoading,
   serverErrMsg,
   customErr,
-  resetServerError
+  resetServerError,
 }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
 

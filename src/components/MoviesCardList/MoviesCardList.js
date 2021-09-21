@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from "react";
 import MovieNotFound from "../MovieNotFound/MovieNotFound";
 import MoviesCard from "../MoviesCard/MoviesCard";
@@ -13,9 +12,8 @@ export default function MoviesCardList({
   step,
   isLoading,
   notFound,
-  allMovies
+  allMovies,
 }) {
-  //увеличивает кол-во карточек на шаг
   function handleMoreBtnClick() {
     return setMaxNumberOfMovies(maxNumberOfMovies + step);
   }

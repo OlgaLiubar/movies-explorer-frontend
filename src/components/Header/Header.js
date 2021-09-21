@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
 import React from "react";
-import PropTypes from "prop-types";
 import headerLogo from "../../images/headerLogo.svg";
 import NavLanding from "../NavLanding/NavLanding";
 import NavMovies from "../NavMovies/NavMovies";
@@ -20,8 +18,3 @@ export default function Header({ headerDark, loggedIn, handleBurgerClick }) {
     </header>
   );
 }
-
-Header.propTypes = {
-  headerDark: PropTypes.string,
-  handleBurgerClick: PropTypes.func,
-};

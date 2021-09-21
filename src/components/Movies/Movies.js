@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
 import React from "react";
-
 import SearchForm from "../SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import Header from "../Header/Header";
@@ -39,7 +37,7 @@ export default function Movies({
           isShortFilms={isCheckedForShortFilms}
           localArr={localStorage.movies}
         />
-      <p className="movies__error">{fetchErrMsg || ""}</p>
+        <p className="movies__error">{fetchErrMsg || ""}</p>
         {isLoading && <Preloader />}
         <MoviesCardList
           cardList={cards}

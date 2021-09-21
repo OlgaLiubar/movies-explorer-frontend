@@ -1,7 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from "react";
-import PropTypes from "prop-types";
-import { getTimeFromMins } from "../../utils/functions";
+import getTimeFromMins from "../../utils/getTimeFromMins";
 import { useLocation } from "react-router-dom";
 const IMG_BASE_URL = "https://api.nomoreparties.co";
 
@@ -28,9 +26,9 @@ export default function MoviesCard({
   }
 
   function handleSaveBtnClick() {
-    if(!savedMovie){
+    if (!savedMovie) {
       onSaveMovie(card);
-      console.log(card)
+      console.log(card);
     } else {
       onDeleteMovie(savedMovie._id);
     }
@@ -38,7 +36,7 @@ export default function MoviesCard({
 
   function handleDeleteClick() {
     onDeleteMovie(card._id);
-    console.log('clicked')
+    console.log("clicked");
   }
 
   return (
@@ -58,7 +56,9 @@ export default function MoviesCard({
       <button
         className={handleButtonChange()}
         type="button"
-        onClick={path === "/saved-movies" ? handleDeleteClick : handleSaveBtnClick }
+        onClick={
+          path === "/saved-movies" ? handleDeleteClick : handleSaveBtnClick
+        }
       >
         {savedMovie || path === "/saved-movies" ? "" : "Сохранить"}
       </button>
@@ -70,7 +70,3 @@ export default function MoviesCard({
     </li>
   );
 }
-
-MoviesCard.propTypes = {
-  card: PropTypes.object.isRequired,
-};
