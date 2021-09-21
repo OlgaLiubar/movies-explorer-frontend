@@ -8,8 +8,7 @@ export default function Login({
   isLoading,
   serverErrMsg,
   customErr,
-  // resetServerError
-  // setIsError
+  resetServerError
 }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
 
@@ -38,6 +37,7 @@ export default function Login({
       values={values}
       serverErrMsg={serverErrMsg}
       customErr={customErr}
+      resetServerError={resetServerError}
     />
   );
 }

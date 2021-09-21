@@ -65,8 +65,6 @@ export default function App() {
   const [successMsg, setSuccessMsg] = React.useState('');
   const [fetchErrMsg, setFetchErrMsg] = React.useState('');
 
-  // console.log(loggedIn);
-
   function handleBurgerClick() {
     setIsSidebarOpen(true);
   }
@@ -77,11 +75,11 @@ export default function App() {
 
   function handleServerError(err) {
     setServerErrMsg(err);
-    // console.log(serverErrMsg);
   }
 
   function resetServerError() {
-    setIsError(false);
+    setServerErrMsg('');
+    setCustomErr('');
   }
 
   //получи данные пользователя с сервера, когда я скажу, и запиши в current user
@@ -92,7 +90,6 @@ export default function App() {
         setCurrentUser(res);
       })
       .catch((err) => {
-        // getMessageForUser(err);
         console.log(`${err}`);
       });
   }
@@ -162,7 +159,6 @@ export default function App() {
         resetServerError()
       })
       .catch((err) => {
-        // console.log(err);
         handleServerError(err);
         setCustomErr("При регистрации пользователя произошла ошибка.");
       })
@@ -184,7 +180,6 @@ export default function App() {
         history.push("/movies");
       })
       .catch((err) => {
-        console.log(err);
         handleServerError(err);
         setCustomErr("При авторизации произошла ошибка.");
       })
@@ -236,7 +231,6 @@ export default function App() {
         query,
         isCheckedForSavedShortFilms
       );
-      console.log(filteredMovies)
       handleNoFoundSavedMovies(filteredMovies);
       setFoundSavedMovies(filteredMovies);
     }
@@ -292,7 +286,6 @@ export default function App() {
 
   React.useEffect(() => {
     if (localStorage.savedMovies) {
-      console.log(localStorage.savedMovies)
       if(isCheckedForSavedShortFilms==true){
       const filteredMovies = JSON.parse(localStorage.savedMovies).filter((movie) => movie.duration <= 40);
       setFoundSavedMovies(filteredMovies);
@@ -304,7 +297,6 @@ export default function App() {
     return;
   }, [isCheckedForSavedShortFilms]);
 
-  console.log(isCheckedForSavedShortFilms);
   //при логине, если в локальном хранилище нет массива с фильмами, запроси его с сервера
   //и запиши в локальное хранилище
   React.useEffect(() => {
@@ -447,7 +439,6 @@ function handleCheckMovies() {
             isSavedMovie={isSavedMovie}
             isCheckedForShortFilms={isCheckedForShortFilms}
             handleCheck={handleCheckMovies}
-            width={width}
             setMaxNumberOfMovies={setMaxNumberOfMovies}
             maxNumberOfMovies={maxNumberOfMovies}
             setStep={setStep}
@@ -471,11 +462,6 @@ function handleCheckMovies() {
             onDeleteMovie={handleRemoveSavedMovie}
             isCheckedForSavedShortFilms={isCheckedForSavedShortFilms}
             handleCheck={handleCheckSavedMovies}
-            width={width}
-            setMaxNumberOfMovies={setMaxNumberOfMovies}
-            maxNumberOfMovies={maxNumberOfMovies}
-            setStep={setStep}
-            step={step}
             isSavedMovie={isSavedMovie}
             notFound={isNotFoundSaved}
             fetchErrMsg={fetchErrMsg}
@@ -505,7 +491,8 @@ function handleCheckMovies() {
                 onSubmit={handleRegister}
                 serverErrMsg={serverErrMsg}
                 customErr={customErr}
-                // resetServerError={resetServerError}
+                isError={isError}
+                resetServerError={resetServerError}
               />
             )}
           </Route>
@@ -519,7 +506,8 @@ function handleCheckMovies() {
                 onSubmit={handleLogin}
                 serverErrMsg={serverErrMsg}
                 customErr={customErr}
-                // resetServerError={resetServerError}
+                isError={isError}
+                resetServerError={resetServerError}
               />
             )}
           </Route>

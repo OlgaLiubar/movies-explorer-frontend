@@ -67,6 +67,10 @@
   width: 100%;
 }
 
+.auth__input_invalid {
+  color: rgba(255, 48, 85, 1);
+}
+
 .auth__input:focus {
   outline: none;
   border-bottom: 2px solid rgb(212, 212, 212);
@@ -79,6 +83,7 @@
   line-height: 12px;
   margin-top: 10px;
   margin-bottom: 10px;
+  max-width: 400px;
 }
 
 .auth__submit-btn {

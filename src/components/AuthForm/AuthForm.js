@@ -19,14 +19,19 @@ export default function AuthForm({
   onSubmit,
   serverErrMsg,
   customErr,
+  resetServerError
 }) {
+
+  function hideError() {
+    resetServerError()
+  }
   return (
     <section className="auth">
       <Link to="/">
         <div className="auth__logo"></div>
       </Link>
       <h1 className="auth__title">{`${title}`}</h1>
-      <form onSubmit={onSubmit} className="auth__form">
+      <form onSubmit={onSubmit} className="auth__form" noValidate>
         <fieldset className="auth__fieldset">
           {signUp && (
             <label className="auth__label">
@@ -38,6 +43,7 @@ export default function AuthForm({
                 type="text"
                 name="name"
                 onChange={onChangeInput}
+                onFocus={hideError}
                 required
               />
               <span className="auth__input-error" id="name-error">
@@ -53,6 +59,7 @@ export default function AuthForm({
               name="email"
               required
               onChange={onChangeInput}
+              onFocus={hideError}
             />
             <span className="auth__input-error" id="email-error">
               {errors.email || ""}
@@ -61,12 +68,15 @@ export default function AuthForm({
           <label className="auth__label">
             <p className="auth__input-name">Пароль</p>
             <input
-              className="auth__input"
+              className={
+                !errors.password ? "auth__input" : "auth__input auth__input_invalid"
+              }
               minLength={8}
               type="password"
               name="password"
               onChange={onChangeInput}
               required
+              onFocus={hideError}
             />
             <span className="auth__input-error" id="password-error">
               {errors.password || ""}

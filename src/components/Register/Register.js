@@ -9,6 +9,7 @@ export default function Register({
   isLoading,
   serverErrMsg,
   customErr,
+  resetServerError
 }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
 
@@ -36,6 +37,7 @@ export default function Register({
           isLoading={isLoading}
           serverErrMsg={serverErrMsg}
           customErr={customErr}
+          resetServerError={resetServerError}
         />
       )}
     </>

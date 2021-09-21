@@ -13,13 +13,13 @@ export default function MoviesCardList({
   step,
   isLoading,
   notFound,
+  allMovies
 }) {
   //увеличивает кол-во карточек на шаг
   function handleMoreBtnClick() {
     return setMaxNumberOfMovies(maxNumberOfMovies + step);
   }
 
-  // console.log(savedMovies);
   const moviesToRender = cardList.slice(0, maxNumberOfMovies);
 
   return (
@@ -36,7 +36,7 @@ export default function MoviesCardList({
           />
         ))}
       </ul>
-      {cardList.length > maxNumberOfMovies && (
+      {allMovies && cardList.length > maxNumberOfMovies && (
         <button
           className="moviesCardList__more-button"
           onClick={handleMoreBtnClick}

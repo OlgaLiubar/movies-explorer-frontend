@@ -7,7 +7,6 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Preloader from "../Preloader/Preloader";
 import PropTypes from "prop-types";
-// import MovieNotFound from "../MovieNotFound/MovieNotFound";
 
 export default function Movies({
   handleBurgerClick,
@@ -28,7 +27,7 @@ export default function Movies({
   notFound,
   onDeleteMovie,
   customErr,
-  fetchErrMsg, 
+  fetchErrMsg,
 }) {
   return (
     <>
@@ -56,6 +55,7 @@ export default function Movies({
           notFound={notFound}
           onDeleteMovie={onDeleteMovie}
           customErr={customErr}
+          allMovies={true}
         />
       </section>
       <Footer />

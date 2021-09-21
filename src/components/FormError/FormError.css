@@ -7,12 +7,10 @@
   margin-bottom: 20px;
   text-align: center;
   cursor: default;
-}
-
-.error_centered {
-  text-align: center;
+  margin-top: auto;
   width: 100%;
 }
+
 .error_invisible {
   visibility: hidden;
 }

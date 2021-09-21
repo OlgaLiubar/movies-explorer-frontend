@@ -5,18 +5,13 @@ import React from "react";
 
 export default function FormButton({ btnName, isValid, isError }) {
 
-//  const error = handleServerError(serverErrMsg);
-// //  console.log(serverErrMsg);
-//  console.log(error);
-// console.log(isError)
 
   return (
     <>
-      {/* <span className="submit-btn__error">{error == 1 ? customErr : error}</span> */}
       <button
         type="submit"
         value="Отправить"
-        className={`submit-btn ${!isValid || isError && "submit-btn_disabled"}`}
+        className={`submit-btn ${(!isValid || isError) && "submit-btn_disabled"}`}
         disabled={!isValid || isError}
       >
         {btnName}

@@ -14,7 +14,7 @@ export default function SearchForm({
 
   const { values, handleChange, isValid } = useFormWithValidation({});
   const [isError, setIsError] = React.useState(false);
-  const errorSelector = isError ? "error error_centered" : "error_invisible";
+  const errorSelector = isError ? "error " : "error_invisible";
 
   const handleChangeInput = (evt) => {
     handleChange(evt);
