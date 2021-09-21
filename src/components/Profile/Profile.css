@@ -118,6 +118,13 @@ color: rgba(0, 0, 0, 0.5)
   margin-top: 10px;
 }
 
+.profile__success {
+  color: rgba(43, 224, 128, 1);
+  font-size: 12px;
+  line-height: 14px;
+  margin-top: 30px;
+}
+
 @media screen and (max-width: 768px) {
   .profile {
     padding: 236px 0 269px;
@@ -127,9 +134,9 @@ color: rgba(0, 0, 0, 0.5)
     margin-top: 80px;
   }
 
-  .profile__submit-btn {
+  /* .profile__submit-btn {
     margin: 195px 0 16px;
-  }
+  } */
 }
 
 @media screen and (max-width: 470px) {
@@ -141,9 +148,9 @@ color: rgba(0, 0, 0, 0.5)
     margin-top: 64px;
   }
 
-  .profile__submit-btn {
+  /* .profile__submit-btn {
     margin: 363px 0 16px;
-  }
+  } */
 
   .profile__label {
     min-width: calc(100vw - 60px);

@@ -18,10 +18,8 @@ export default function AuthForm({
   isValid,
   onSubmit,
   serverErrMsg,
-  // isCustomErr,
   customErr,
 }) {
-
   return (
     <section className="auth">
       <Link to="/">
@@ -75,15 +73,8 @@ export default function AuthForm({
             </span>
           </label>
         </fieldset>
-        <FormError
-          serverErrMsg={serverErrMsg}
-          customErr={customErr}
-        />
-        <FormButton
-          btnName={btnName}
-          isValid={isValid}
-          values={values}
-        />
+        <FormError serverErrMsg={serverErrMsg} customErr={customErr} />
+        <FormButton btnName={btnName} isValid={isValid} values={values} />
       </form>
       <p className="auth__signed-up">
         {authQuestion}

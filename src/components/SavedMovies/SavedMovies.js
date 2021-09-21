@@ -18,39 +18,40 @@ export default function SavedMovies({
   isCheckedForSavedShortFilms,
   handleCheck,
   foundSavedMovies,
-  setMaxNumberOfMovies, 
+  setMaxNumberOfMovies,
   maxNumberOfMovies,
   setStep,
   step,
-  notFound
+  notFound,
+  fetchErrMsg,
 }) {
-
   return (
     <>
       <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
       <section className="saved-movies">
-        <SearchForm     
+        <SearchForm
           handleMovieSearch={handleMovieSearch}
           handleCheck={handleCheck}
-          isCheckedForShortFilms={isCheckedForSavedShortFilms}
+          isShortFilms={isCheckedForSavedShortFilms}
           savedMov={true}
           localArr={localStorage.savedMovies}
-          />
-        {isLoading && <Preloader/>}
-      {/* {(savedCards.length === 0 && !isCheckedForSavedShortFilms)
+        />
+        <p className="movies__error">{fetchErrMsg || ""}</p>
+        {isLoading && <Preloader />}
+        {/* {(savedCards.length === 0 && !isCheckedForSavedShortFilms)
       && <p className="no-saved-movies">У вас пока нет сохраненных фильмов</p>} */}
-          <MoviesCardList
-            // cardList={filterShortFilms(savedCards)}
-            cardList={foundSavedMovies}
-            savedMovies={savedMovies}
-            isSavedMovie={isSavedMovie}
-            onDeleteMovie={onDeleteMovie}
-            setMaxNumberOfMovies={setMaxNumberOfMovies}
-            maxNumberOfMovies={maxNumberOfMovies}
-            setStep={setStep}
-            step={step}
-            notFound={notFound}
-          />
+        <MoviesCardList
+          // cardList={filterShortFilms(savedCards)}
+          cardList={foundSavedMovies}
+          savedMovies={savedMovies}
+          isSavedMovie={isSavedMovie}
+          onDeleteMovie={onDeleteMovie}
+          setMaxNumberOfMovies={setMaxNumberOfMovies}
+          maxNumberOfMovies={maxNumberOfMovies}
+          setStep={setStep}
+          step={step}
+          notFound={notFound}
+        />
       </section>
       <Footer />
     </>

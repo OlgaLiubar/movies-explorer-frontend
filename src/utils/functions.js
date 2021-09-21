@@ -11,7 +11,7 @@
 //   }
 // }
 
-function filterMovies(localMoviesArr, query, checkedForShortFilms) {
+function filterMovies(localMoviesArr, query, shortFilms) {
   let filteredMovies = [];
 
   //возьми массив с фильмами, запиши в новый массив только отфильтрованные по запросу
@@ -24,7 +24,7 @@ function filterMovies(localMoviesArr, query, checkedForShortFilms) {
   }
   //если мы знаем, что нужны короткие, то возьми массив, отфильтрованный по слову, и отфильтруй
   //его по длительности
-  if (checkedForShortFilms) {
+  if (shortFilms) {
     filteredMovies = filteredMovies.filter((movie) => movie.duration <= 40);
   }
   //верни отфильтрованный массив

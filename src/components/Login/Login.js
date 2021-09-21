@@ -3,17 +3,25 @@ import React from "react";
 import { useFormWithValidation } from "../../hooks/useForm";
 import AuthForm from "../AuthForm/AuthForm";
 
-export default function Login({ onSubmit, isLoading, serverErrMsg, customErr }) {
+export default function Login({
+  onSubmit,
+  isLoading,
+  serverErrMsg,
+  customErr,
+  // resetServerError
+  // setIsError
+}) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
-
-  // console.log(values)
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    // console.log(values)
     onSubmit(values);
-  }
-  
+  };
+
+  // React.useEffect(() => () => {
+  //   setIsError(false);
+  // }, []);
+
   return (
     <AuthForm
       title="Рады видеть!"

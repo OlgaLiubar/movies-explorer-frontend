@@ -20,6 +20,7 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { filterMovies } from "../../utils/functions";
 import getNumberOfMovies from "../../utils/getNumberOfMovies";
 import { SUCCESS_MSG } from "../../utils/constants";
+import { FETCH_MOVIES_ERR } from "../../utils/constants";
 // import Preloader from "../Preloader/Preloader";
 
 // const MOVIES_API_URL = "https://api.nomoreparties.co";
@@ -62,6 +63,7 @@ export default function App() {
   const [isNotFoundSaved, setIsNotFoundSaved] = React.useState(false);
 
   const [successMsg, setSuccessMsg] = React.useState('');
+  const [fetchErrMsg, setFetchErrMsg] = React.useState('');
 
   // console.log(loggedIn);
 
@@ -103,11 +105,12 @@ export default function App() {
         .getSavedMovies()
         .then((savedMovies) => {
           setSavedMovies(savedMovies);
+          setFoundSavedMovies(savedMovies);
           //записываем сохраненные фильмы(с апи) в локальное хранилище
           localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
         })
         .catch((err) => {
-          //здесь нужно длинное сообщение 
+          setFetchErrMsg(FETCH_MOVIES_ERR);
           console.log(`${err}`);
         });
     }
@@ -156,6 +159,7 @@ export default function App() {
       .register(name, email, password)
       .then(() => {
         handleLogin({ email, password });
+        resetServerError()
       })
       .catch((err) => {
         // console.log(err);
@@ -176,6 +180,7 @@ export default function App() {
       .then(() => {
         getUserData();
         setLoggedIn(true);
+        resetServerError()
         history.push("/movies");
       })
       .catch((err) => {
@@ -194,6 +199,7 @@ export default function App() {
     api
       .uploadUserInfo({ name, email })
       .then((user) => {
+        resetServerError()
         setSuccessMsg(SUCCESS_MSG);
         setCurrentUser(user);
       })
@@ -232,7 +238,7 @@ export default function App() {
       );
       console.log(filteredMovies)
       handleNoFoundSavedMovies(filteredMovies);
-      return setFoundSavedMovies(filteredMovies);
+      setFoundSavedMovies(filteredMovies);
     }
   }
 
@@ -284,6 +290,21 @@ export default function App() {
     return;
   }, [isCheckedForSavedShortFilms]);
 
+  React.useEffect(() => {
+    if (localStorage.savedMovies) {
+      console.log(localStorage.savedMovies)
+      if(isCheckedForSavedShortFilms==true){
+      const filteredMovies = JSON.parse(localStorage.savedMovies).filter((movie) => movie.duration <= 40);
+      setFoundSavedMovies(filteredMovies);
+      }
+      else {
+        setFoundSavedMovies(savedMovies);
+      }
+    }
+    return;
+  }, [isCheckedForSavedShortFilms]);
+
+  console.log(isCheckedForSavedShortFilms);
   //при логине, если в локальном хранилище нет массива с фильмами, запроси его с сервера
   //и запиши в локальное хранилище
   React.useEffect(() => {
@@ -301,8 +322,8 @@ export default function App() {
         localStorage.setItem("movies", JSON.stringify(movies));
       })
         .catch((err) => {
-          //здесь нужно длинное сообщение об ошибке
-          console.log(err);
+          setFetchErrMsg(FETCH_MOVIES_ERR);
+          console.log(`${err}`);
         })
         .finally(() => setIsLoading(false));
     }
@@ -317,8 +338,8 @@ export default function App() {
       localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
     })
       .catch((err) => {
-        //здесь нужно длинное сообщение об ошибке
-        console.log(err);
+        setFetchErrMsg(FETCH_MOVIES_ERR);
+        console.log(`${err}`);
       })
       .finally(() => setIsLoading(false));
     }
@@ -339,7 +360,8 @@ export default function App() {
 
   //Проверяем по id, есть ли фильм в сохраненных
   function isSavedMovie(card) {
-    return savedMovies.find((item) => item.movieId === card.id);
+    const savedMovie = savedMovies.find((item) => item.movieId === card.id);
+    return savedMovie
   }
 
   //Обработчик удаления карточки из сохраненных:
@@ -349,7 +371,7 @@ export default function App() {
       .deleteMovie(movieId)
       .then((deletedMovie) => {
           const newSavedMovies = foundSavedMovies.filter(
-            (movie) => movie.id !== deletedMovie.data.id
+            (movie) => movie._id !== deletedMovie.data._id
           );
           setFoundSavedMovies(newSavedMovies);
           getSavedMovies();
@@ -393,6 +415,18 @@ function handleCheckMovies() {
     setStep(step);
   }, [width]);
 
+  React.useEffect(() => {
+    setTimeout(() => {
+      setSuccessMsg('');
+    }, 2000);
+  }, [successMsg]);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setSuccessMsg('');
+    }, 2000);
+  }, [fetchErrMsg]);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -420,6 +454,9 @@ function handleCheckMovies() {
             step={step}
             savedMovies={savedMovies}
             notFound={isNotFound}
+            onDeleteMovie={handleRemoveSavedMovie}
+            fetchErrMsg={fetchErrMsg}
+
           />
 
           <ProtectedRoute
@@ -441,6 +478,7 @@ function handleCheckMovies() {
             step={step}
             isSavedMovie={isSavedMovie}
             notFound={isNotFoundSaved}
+            fetchErrMsg={fetchErrMsg}
           />
 
           <ProtectedRoute
@@ -467,6 +505,7 @@ function handleCheckMovies() {
                 onSubmit={handleRegister}
                 serverErrMsg={serverErrMsg}
                 customErr={customErr}
+                // resetServerError={resetServerError}
               />
             )}
           </Route>
@@ -480,6 +519,7 @@ function handleCheckMovies() {
                 onSubmit={handleLogin}
                 serverErrMsg={serverErrMsg}
                 customErr={customErr}
+                // resetServerError={resetServerError}
               />
             )}
           </Route>

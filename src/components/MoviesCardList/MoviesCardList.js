@@ -12,7 +12,7 @@ export default function MoviesCardList({
   maxNumberOfMovies,
   step,
   isLoading,
-  notFound
+  notFound,
 }) {
   //увеличивает кол-во карточек на шаг
   function handleMoreBtnClick() {
@@ -28,7 +28,7 @@ export default function MoviesCardList({
       <ul className="moviesCardList__gallery">
         {moviesToRender.map((card) => (
           <MoviesCard
-            key={card.id}
+            key={card.id || card._id}
             card={card}
             onSaveMovie={onSaveMovie}
             isSavedMovie={isSavedMovie}

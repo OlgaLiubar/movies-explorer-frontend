@@ -7,14 +7,13 @@ import { useFormWithValidation } from "../../hooks/useForm";
 export default function SearchForm({
   handleMovieSearch,
   handleCheck,
-  isCheckedForShortFilms,
+  isShortFilms,
   localArr,
   savedMov,
 }) {
 
   const { values, handleChange, isValid } = useFormWithValidation({});
   const [isError, setIsError] = React.useState(false);
-  // console.log(isError)
   const errorSelector = isError ? "error error_centered" : "error_invisible";
 
   const handleChangeInput = (evt) => {
@@ -61,7 +60,7 @@ export default function SearchForm({
         </div>
         <FilterCheckbox
           handleCheck={handleCheck}
-          isCheckedForShortFilms={isCheckedForShortFilms}
+          isShortFilms={isShortFilms}
         />
       </form>
     </section>

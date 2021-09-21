@@ -13,13 +13,13 @@ export default function MoviesCard({
 }) {
   const path = useLocation().pathname;
 
-  const isSaved = isSavedMovie(card);
+  const savedMovie = isSavedMovie(card);
 
   function handleButtonChange() {
     let btnClassName = "";
     if (path === "/saved-movies") {
       btnClassName = "card__save-button_delete";
-    } else if (isSaved) {
+    } else if (savedMovie) {
       btnClassName = "card__save-button_checked";
     } else {
       btnClassName = "card__save-button";
@@ -27,9 +27,13 @@ export default function MoviesCard({
     return btnClassName;
   }
 
-  function handleSaveClick() {
-    // console.log('clicked')
-    onSaveMovie(card);
+  function handleSaveBtnClick() {
+    if(!savedMovie){
+      onSaveMovie(card);
+      console.log(card)
+    } else {
+      onDeleteMovie(savedMovie._id);
+    }
   }
 
   function handleDeleteClick() {
@@ -54,9 +58,9 @@ export default function MoviesCard({
       <button
         className={handleButtonChange()}
         type="button"
-        onClick={path === "/saved-movies" ? handleDeleteClick : handleSaveClick }
+        onClick={path === "/saved-movies" ? handleDeleteClick : handleSaveBtnClick }
       >
-        {isSaved || path === "/saved-movies" ? "" : "Сохранить"}
+        {savedMovie || path === "/saved-movies" ? "" : "Сохранить"}
       </button>
 
       <div className="card__info">

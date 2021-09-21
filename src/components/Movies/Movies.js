@@ -19,16 +19,17 @@ export default function Movies({
   isSavedMovie,
   isCheckedForShortFilms,
   handleCheck,
-  setMaxNumberOfMovies, 
+  setMaxNumberOfMovies,
   maxNumberOfMovies,
   setStep,
   step,
   savedMovies,
   foundMovies,
-  notFound
+  notFound,
+  onDeleteMovie,
+  customErr,
+  fetchErrMsg, 
 }) {
-
-  
   return (
     <>
       <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
@@ -36,9 +37,10 @@ export default function Movies({
         <SearchForm
           handleMovieSearch={handleMovieSearch}
           handleCheck={handleCheck}
-          isCheckedForShortFilms={isCheckedForShortFilms}
+          isShortFilms={isCheckedForShortFilms}
           localArr={localStorage.movies}
         />
+      <p className="movies__error">{fetchErrMsg || ""}</p>
         {isLoading && <Preloader />}
         <MoviesCardList
           cardList={cards}
@@ -52,6 +54,8 @@ export default function Movies({
           foundMovies={foundMovies}
           isLoading={isLoading}
           notFound={notFound}
+          onDeleteMovie={onDeleteMovie}
+          customErr={customErr}
         />
       </section>
       <Footer />

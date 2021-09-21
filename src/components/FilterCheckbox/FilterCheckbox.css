@@ -76,6 +76,10 @@
   .checkbox__input-visible {
     margin: 0 0 0 16px;
   }
+
+  .checkbox__input-visible_checked {
+    margin: 0 0 0 16px;
+  }
 }
 
 @media screen and (max-width: 615px) {
