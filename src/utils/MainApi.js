@@ -81,7 +81,7 @@ class Api {
 }
 
 const api = new Api({
-  url: "https://api.olgaliubar.nomoredomains.club",
+  url: "https://olgaliubar.nomoredomains.club",
   // url: "http://localhost:3001",
   headers: {
     Accept: "application/json",
