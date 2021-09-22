@@ -1,7 +1,7 @@
 class Auth {
   constructor() {
-    this._baseUrl = "https://olgaliubar.nomoredomains.club";
-    // this._baseUrl = "http://localhost:3001";
+    this._baseUrl = "https://api.olgaliubar.nomoredomains.club";
+    // this._baseUrl = "http://localhost:3005";
   }
 
   _checkResponse(res) {

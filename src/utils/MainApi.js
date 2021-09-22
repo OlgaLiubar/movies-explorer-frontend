@@ -81,12 +81,11 @@ class Api {
 }
 
 const api = new Api({
-  url: "https://olgaliubar.nomoredomains.club",
-  // url: "http://localhost:3001",
+  url: "https://api.olgaliubar.nomoredomains.club",
+  // url: "http://localhost:3005",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
-    // authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
 
