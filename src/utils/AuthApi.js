@@ -1,6 +1,7 @@
 class Auth {
   constructor() {
-    this._baseUrl = "https://api.olgaliubar.nomoredomains.club";
+    // this._baseUrl = "https://api.olgaliubar.nomoredomains.club";
+    this._baseUrl = "http://localhost:3001";
   }
 
   _checkResponse(res) {
@@ -16,6 +17,7 @@ class Auth {
       method: "POST",
       credentials: "include",
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -30,7 +32,10 @@ class Auth {
     return fetch(`${this._baseUrl}/signin`, {
       method: "POST",
       credentials: "include",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         password: password,
         email: email,
@@ -49,6 +54,7 @@ class Auth {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
     }).then(this._checkResponse);
