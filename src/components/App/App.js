@@ -119,20 +119,19 @@ export default function App() {
   }, [loggedIn]);
 
   React.useEffect(() => {
-    
     function checkToken() {
       if (loggedIn) {
-      const jwt = localStorage.getItem("token");
-      if (jwt) {
-        auth
-          .getContent(jwt)
-          .then((res) => {
-            if (res) {
-              setLoggedIn(true);
-            }
-          })
-          .catch((err) => console.log(err));
-      }
+        const jwt = localStorage.getItem("token");
+        if (jwt) {
+          auth
+            .getContent(jwt)
+            .then((res) => {
+              if (res) {
+                setLoggedIn(true);
+              }
+            })
+            .catch((err) => console.log(err));
+        }
       }
     }
     checkToken();
@@ -192,11 +191,20 @@ export default function App() {
   }
 
   function handleLogOut() {
-    setFoundMovies([]);
-    setFoundSavedMovies([]);
-    setLoggedIn(false);
-    localStorage.clear();
-    history.push("/");
+    setIsLoading(true);
+    auth
+      .signOut()
+      .then(() => {
+        setFoundMovies([]);
+        setFoundSavedMovies([]);
+        setLoggedIn(false);
+        localStorage.clear();
+        history.push("/");
+      })
+      .catch((err) => {
+        console.log(`${err}`);
+      })
+      .finally(() => setIsLoading(false));
   }
 
   function handleMovieSearch(query, localArr) {

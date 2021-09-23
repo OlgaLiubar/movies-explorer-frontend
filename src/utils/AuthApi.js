@@ -59,6 +59,17 @@ class Auth {
       },
     }).then(this._checkResponse);
   }
+
+  signOut() {
+    return fetch(`${this._baseUrl}/users/signout`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }).then(this._checkResponse);
+  }
 }
 
 export const auth = new Auth();
