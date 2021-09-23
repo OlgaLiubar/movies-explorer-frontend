@@ -61,7 +61,7 @@ class Auth {
   }
 
   signOut() {
-    return fetch(`${this._baseUrl}/users/signout`, {
+    return fetch(`${this._baseUrl}/signout`, {
       method: "POST",
       credentials: "include",
       headers: {
