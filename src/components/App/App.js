@@ -190,6 +190,11 @@ export default function App() {
       .finally(() => setIsLoading(false));
   }
 
+  function clearData() {
+    setLoggedIn(false);
+    localStorage.clear();
+  }
+
   function handleLogOut() {
     setIsLoading(true);
     auth
@@ -197,8 +202,7 @@ export default function App() {
       .then(() => {
         setFoundMovies([]);
         setFoundSavedMovies([]);
-        setLoggedIn(false);
-        localStorage.clear();
+        clearData();
         history.push("/");
       })
       .catch((err) => {
