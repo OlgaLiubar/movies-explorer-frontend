@@ -119,7 +119,9 @@ export default function App() {
   }, [loggedIn]);
 
   React.useEffect(() => {
+    
     function checkToken() {
+      if (loggedIn) {
       const jwt = localStorage.getItem("token");
       if (jwt) {
         auth
@@ -130,6 +132,7 @@ export default function App() {
             }
           })
           .catch((err) => console.log(err));
+      }
       }
     }
     checkToken();
