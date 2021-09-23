@@ -136,7 +136,7 @@ export default function App() {
       }
     }
     checkToken();
-  }, []);
+  }, [loggedIn]);
 
   function handleRegister({ name, email, password }) {
     setIsLoading(true);
