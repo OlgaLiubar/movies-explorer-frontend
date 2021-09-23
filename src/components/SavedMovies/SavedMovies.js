@@ -5,6 +5,7 @@ import SearchForm from "../SearchForm/SearchForm";
 import Footer from "../Footer/Footer";
 import Preloader from "../Preloader/Preloader";
 import PropTypes from "prop-types";
+// import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
 export default function SavedMovies({
   isLoading,
@@ -24,6 +25,15 @@ export default function SavedMovies({
   notFound,
   fetchErrMsg,
 }) {
+
+// const user = React.useContext(CurrentUserContext);
+
+// function filterSavedMovies(moviesArr){
+// const myFoundSavedMovies = moviesArr.filter((movie) => movie.owner == user._id
+// )
+// return myFoundSavedMovies
+// }
+
   return (
     <>
       <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />

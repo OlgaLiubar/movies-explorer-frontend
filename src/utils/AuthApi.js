@@ -1,7 +1,6 @@
 class Auth {
   constructor() {
     this._baseUrl = "https://api.olgaliubar.nomoredomains.club";
-    // this._baseUrl = "http://localhost:3005";
   }
 
   _checkResponse(res) {
@@ -40,22 +39,16 @@ class Auth {
         password: password,
         email: email,
       }),
-    })
-      .then(this._checkResponse)
-      .then((data) => {
-        localStorage.setItem("token", data.token);
-        return data;
-      });
+    }).then(this._checkResponse);
   }
 
-  getContent(token) {
+  getContent() {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${token}`,
       },
     }).then(this._checkResponse);
   }

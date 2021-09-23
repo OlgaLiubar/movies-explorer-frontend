@@ -90,9 +90,12 @@ export default function App() {
       api
         .getSavedMovies()
         .then((savedMovies) => {
-          setSavedMovies(savedMovies);
-          setFoundSavedMovies(savedMovies);
-          localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
+          const mySavedMovies = savedMovies.filter(
+            (movie) => movie.owner == currentUser._id
+          );
+          setSavedMovies(mySavedMovies);
+          setFoundSavedMovies(mySavedMovies);
+          localStorage.setItem("savedMovies", JSON.stringify(mySavedMovies));
         })
         .catch((err) => {
           setFetchErrMsg(FETCH_MOVIES_ERR);
@@ -118,23 +121,19 @@ export default function App() {
     }
   }, [loggedIn]);
 
+  console.log(loggedIn);
+
   React.useEffect(() => {
-    function checkToken() {
-      if (loggedIn) {
-        const jwt = localStorage.getItem("token");
-        if (jwt) {
-          auth
-            .getContent(jwt)
-            .then((res) => {
-              if (res) {
-                setLoggedIn(true);
-              }
-            })
-            .catch((err) => console.log(err));
+    if(loggedIn){
+      auth
+      .getContent()
+      .then((res) => {
+        if (res) {
+          setLoggedIn(true);
         }
-      }
+      })
+      .catch((err) => console.log(err));
     }
-    checkToken();
   }, [loggedIn]);
 
   function handleRegister({ name, email, password }) {
@@ -309,12 +308,30 @@ export default function App() {
     }
   }, [loggedIn]);
 
+  // function getSavedMovies() {
+  //   setIsLoading(true);
+  //   api
+  //     .getSavedMovies()
+  //     .then((savedMovies) => {
+  //       setSavedMovies(savedMovies);
+  //       localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
+  //     })
+  //     .catch((err) => {
+  //       setFetchErrMsg(FETCH_MOVIES_ERR);
+  //       console.log(`${err}`);
+  //     })
+  //     .finally(() => setIsLoading(false));
+  // }
+
   function getSavedMovies() {
     setIsLoading(true);
     api
       .getSavedMovies()
       .then((savedMovies) => {
-        setSavedMovies(savedMovies);
+        const mySavedMovies = savedMovies.filter(
+          (movie) => movie.owner == currentUser._id
+        );
+        setSavedMovies(mySavedMovies);
         localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
       })
       .catch((err) => {
