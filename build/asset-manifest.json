@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.04d126d0.chunk.css",
-    "main.js": "/static/js/main.18f315f3.chunk.js",
-    "main.js.map": "/static/js/main.18f315f3.chunk.js.map",
+    "main.css": "/static/css/main.3f487913.chunk.css",
+    "main.js": "/static/js/main.0f2984b4.chunk.js",
+    "main.js.map": "/static/js/main.0f2984b4.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.397f90c5.js",
     "runtime-main.js.map": "/static/js/runtime-main.397f90c5.js.map",
     "static/js/2.438019a2.chunk.js": "/static/js/2.438019a2.chunk.js",
@@ -10,7 +10,7 @@
     "static/js/3.9bd1751b.chunk.js": "/static/js/3.9bd1751b.chunk.js",
     "static/js/3.9bd1751b.chunk.js.map": "/static/js/3.9bd1751b.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.04d126d0.chunk.css.map": "/static/css/main.04d126d0.chunk.css.map",
+    "static/css/main.3f487913.chunk.css.map": "/static/css/main.3f487913.chunk.css.map",
     "static/js/2.438019a2.chunk.js.LICENSE.txt": "/static/js/2.438019a2.chunk.js.LICENSE.txt",
     "static/media/index.css": "/static/media/searchButton.6b321746.svg",
     "static/media/studentPhoto.c37f918b.jpg": "/static/media/studentPhoto.c37f918b.jpg"
@@ -18,7 +18,7 @@
   "entrypoints": [
     "static/js/runtime-main.397f90c5.js",
     "static/js/2.438019a2.chunk.js",
-    "static/css/main.04d126d0.chunk.css",
-    "static/js/main.18f315f3.chunk.js"
+    "static/css/main.3f487913.chunk.css",
+    "static/js/main.0f2984b4.chunk.js"
   ]
 }

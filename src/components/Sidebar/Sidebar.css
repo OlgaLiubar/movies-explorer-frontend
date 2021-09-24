@@ -24,7 +24,7 @@
   z-index: 11;
 }
 
-.sidebar___close-btn {
+.sidebar__close-btn {
   padding: 0;
   margin: 0;
   width: 32px;
@@ -43,7 +43,7 @@
   cursor: pointer;
 }
 
-.sidebar___close-btn:hover {
+.sidebar__close-btn:hover {
   opacity: 0.6;
 }
 

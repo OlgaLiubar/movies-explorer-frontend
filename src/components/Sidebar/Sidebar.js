@@ -17,7 +17,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <div className="sidebar">
         <button
           type="button"
-          className="sidebar___close-btn"
+          className="sidebar__close-btn"
           onClick={onClose}
         ></button>
         <nav className="sidebar__menu">

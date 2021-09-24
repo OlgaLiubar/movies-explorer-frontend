@@ -81,7 +81,7 @@ class Api {
 }
 
 const api = new Api({
-  url: "https://api.olgaliubar.nomoredomains.club",
+  url: "https://api-beatfilm-movies.xyz",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
