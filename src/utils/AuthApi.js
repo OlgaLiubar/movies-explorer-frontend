@@ -1,6 +1,7 @@
 class Auth {
   constructor() {
-    this._baseUrl = "https://api-beatfilm-movies.xyz";
+    // this._baseUrl = "https://api-beatfilm-movies.xyz";
+    this._baseUrl = "http://localhost:3000";
   }
 
   _checkResponse(res) {

@@ -81,7 +81,8 @@ class Api {
 }
 
 const api = new Api({
-  url: "https://api-beatfilm-movies.xyz",
+  // url: "https://api-beatfilm-movies.xyz",
+  url: "http://localhost:3000",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

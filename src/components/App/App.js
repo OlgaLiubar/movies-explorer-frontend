@@ -121,7 +121,7 @@ export default function App() {
     }
   }, [loggedIn]);
 
-  console.log(loggedIn);
+  // console.log(loggedIn);
 
   React.useEffect(() => {
     if(loggedIn){
