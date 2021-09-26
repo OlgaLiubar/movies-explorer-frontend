@@ -102,12 +102,12 @@ export default function App() {
           console.log(`${err}`);
         });
     }
-  }, [loggedIn]);
+  }, []);
 
   React.useEffect(() => {
     setIsLoading(true);
     if (loggedIn) {
-      api
+      return api
         .getUserData()
         .then((res) => {
           setCurrentUser(res);
@@ -121,11 +121,9 @@ export default function App() {
     }
   }, [loggedIn]);
 
-  // console.log(loggedIn);
-
   React.useEffect(() => {
     if(loggedIn){
-      auth
+      return auth
       .getContent()
       .then((res) => {
         if (res) {
@@ -138,7 +136,7 @@ export default function App() {
 
   function handleRegister({ name, email, password }) {
     setIsLoading(true);
-    auth
+    return auth
       .register(name, email, password)
       .then(() => {
         handleLogin({ email, password });
@@ -155,7 +153,7 @@ export default function App() {
 
   function handleLogin({ email, password }) {
     setIsLoading(true);
-    auth
+    return auth
       .signIn({ email, password })
       .then(() => {
         getUserData();
@@ -174,7 +172,7 @@ export default function App() {
 
   function handleUpdateUser({ name, email }) {
     setIsLoading(true);
-    api
+    return api
       .uploadUserInfo({ name, email })
       .then((user) => {
         resetServerError();
@@ -196,7 +194,7 @@ export default function App() {
 
   function handleLogOut() {
     setIsLoading(true);
-    auth
+    return auth
       .signOut()
       .then(() => {
         setFoundMovies([]);
@@ -308,24 +306,9 @@ export default function App() {
     }
   }, [loggedIn]);
 
-  // function getSavedMovies() {
-  //   setIsLoading(true);
-  //   api
-  //     .getSavedMovies()
-  //     .then((savedMovies) => {
-  //       setSavedMovies(savedMovies);
-  //       localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
-  //     })
-  //     .catch((err) => {
-  //       setFetchErrMsg(FETCH_MOVIES_ERR);
-  //       console.log(`${err}`);
-  //     })
-  //     .finally(() => setIsLoading(false));
-  // }
-
   function getSavedMovies() {
     setIsLoading(true);
-    api
+    return api
       .getSavedMovies()
       .then((savedMovies) => {
         const mySavedMovies = savedMovies.filter(
@@ -342,7 +325,7 @@ export default function App() {
   }
 
   function handleSaveMovie(movie) {
-    api
+    return api
       .saveMovieCard(movie)
       .then((savedCard) => {
         getSavedMovies();
@@ -358,7 +341,7 @@ export default function App() {
   }
 
   function handleRemoveSavedMovie(movieId) {
-    api
+    return api
       .deleteMovie(movieId)
       .then((deletedMovie) => {
         const newSavedMovies = foundSavedMovies.filter(
