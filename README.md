@@ -7,4 +7,4 @@
   
 **Домен:** https://beatfilm-movies.xyz
 
-IP-адрес: 62.84.118.116
+**Ссылка на бэкенд:** https://github.com/OlgaLiubar/movies-explorer-api.git
