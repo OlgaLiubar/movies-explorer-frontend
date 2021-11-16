@@ -9,3 +9,13 @@
 **Сайт:** https://beatfilm-movies.xyz
 
 **Ссылка на бэкенд:** https://github.com/OlgaLiubar/movies-explorer-api.git
+
+## Установка зависимостей
+
+###### Убедитесь, что у вас установлен node.js не ниже 14 версии.
+
+##### `npm i` – установить зависимости проекта
+
+##### `npm start` – запуск devServer на http://localhost:3000/
+
+##### `npm run build` – production сборка проекта
