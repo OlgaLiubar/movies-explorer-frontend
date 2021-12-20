@@ -5,21 +5,59 @@ import SearchForm from "../SearchForm/SearchForm";
 import Footer from "../Footer/Footer";
 import Preloader from "../Preloader/Preloader";
 import PropTypes from "prop-types";
+// import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
-export default function SavedMovies({ handleBurgerClick }) {
- 
-  const [isLoading, setisLoading] = React.useState(false);
+export default function SavedMovies({
+  isLoading,
+  handleBurgerClick,
+  savedMovies,
+  loggedIn,
+  isSavedMovie,
+  onDeleteMovie,
+  handleMovieSearch,
+  isCheckedForSavedShortFilms,
+  handleCheck,
+  foundSavedMovies,
+  setMaxNumberOfMovies,
+  maxNumberOfMovies,
+  setStep,
+  step,
+  notFound,
+  fetchErrMsg,
+}) {
 
-  function handleSearchClick() {
-    setisLoading(true);
-  }
-  
+// const user = React.useContext(CurrentUserContext);
+
+// function filterSavedMovies(moviesArr){
+// const myFoundSavedMovies = moviesArr.filter((movie) => movie.owner == user._id
+// )
+// return myFoundSavedMovies
+// }
+
   return (
     <>
-      <Header handleBurgerClick={handleBurgerClick} />
+      <Header handleBurgerClick={handleBurgerClick} loggedIn={loggedIn} />
       <section className="saved-movies">
-        <SearchForm handleSearchClick={handleSearchClick}/>
-        {isLoading ? <Preloader /> : <MoviesCardList />}
+        <SearchForm
+          handleMovieSearch={handleMovieSearch}
+          handleCheck={handleCheck}
+          isShortFilms={isCheckedForSavedShortFilms}
+          savedMov={true}
+          localArr={localStorage.savedMovies}
+        />
+        <p className="movies__error">{fetchErrMsg || ""}</p>
+        {isLoading && <Preloader />}
+        <MoviesCardList
+          cardList={foundSavedMovies}
+          savedMovies={savedMovies}
+          isSavedMovie={isSavedMovie}
+          onDeleteMovie={onDeleteMovie}
+          setMaxNumberOfMovies={setMaxNumberOfMovies}
+          maxNumberOfMovies={maxNumberOfMovies}
+          setStep={setStep}
+          step={step}
+          notFound={notFound}
+        />
       </section>
       <Footer />
     </>

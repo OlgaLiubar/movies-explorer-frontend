@@ -1,17 +1,23 @@
 import React from "react";
-import PropTypes from "prop-types";
-import cardImg from "../../images/cardImg.png";
+import getTimeFromMins from "../../utils/getTimeFromMins";
 import { useLocation } from "react-router-dom";
+const IMG_BASE_URL = "https://api.nomoreparties.co";
 
-export default function MoviesCard({ card }) {
+export default function MoviesCard({
+  card,
+  onSaveMovie,
+  onDeleteMovie,
+  isSavedMovie,
+}) {
   const path = useLocation().pathname;
-  const isSaved = card.saved;
 
-  function handlePathChange() {
+  const savedMovie = isSavedMovie(card);
+
+  function handleButtonChange() {
     let btnClassName = "";
     if (path === "/saved-movies") {
       btnClassName = "card__save-button_delete";
-    } else if (isSaved) {
+    } else if (savedMovie) {
       btnClassName = "card__save-button_checked";
     } else {
       btnClassName = "card__save-button";
@@ -19,24 +25,48 @@ export default function MoviesCard({ card }) {
     return btnClassName;
   }
 
+  function handleSaveBtnClick() {
+    if (!savedMovie) {
+      onSaveMovie(card);
+      console.log(card);
+    } else {
+      onDeleteMovie(savedMovie._id);
+    }
+  }
+
+  function handleDeleteClick() {
+    onDeleteMovie(card._id);
+    console.log("clicked");
+  }
+
   return (
     <li className="card">
-      <img
-        src={cardImg}
-        alt="Кадр из фильма 'Сто лет дизайна'"
-        className="card__image"
-      />
-      <button className={handlePathChange()} type="button">
-        {isSaved || path === "/saved-movies" ? "" : "Сохранить"}
+      <a
+        className="card__link"
+        href={card.trailerLink}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <img
+          src={card.image.url ? `${IMG_BASE_URL}${card.image.url}` : card.image}
+          alt={card.image.name}
+          className="card__image"
+        />
+      </a>
+      <button
+        className={handleButtonChange()}
+        type="button"
+        onClick={
+          path === "/saved-movies" ? handleDeleteClick : handleSaveBtnClick
+        }
+      >
+        {savedMovie || path === "/saved-movies" ? "" : "Сохранить"}
       </button>
+
       <div className="card__info">
-        <h2 className="card__title">Киноальманах «100 лет дизайна»</h2>
-        <p className="card__duration">1ч 17м</p>
+        <h2 className="card__title">{card.nameRU}</h2>
+        <p className="card__duration">{getTimeFromMins(card.duration)}</p>
       </div>
     </li>
   );
 }
-
-MoviesCard.propTypes = {
-  card: PropTypes.object.isRequired,
-};

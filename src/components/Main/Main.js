@@ -7,10 +7,14 @@ import Portfolio from "../Portfolio/Portfolio";
 import Promo from "../Promo/Promo";
 import Techs from "../Techs/Techs";
 
-export default function Main() {
+export default function Main({ loggedIn, handleBurgerClick }) {
   return (
     <>
-      <Header headerDark="header_dark" isPromo />
+      <Header
+        loggedIn={loggedIn}
+        headerDark="header_dark"
+        handleBurgerClick={handleBurgerClick}
+      />
       <Promo />
       <AboutProject />
       <Techs />

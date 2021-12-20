@@ -1,33 +1,61 @@
 import React from "react";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
-import PropTypes from "prop-types";
+import { useFormWithValidation } from "../../hooks/useForm";
 
-export default function SearchForm({handleSearchClick}) {
+export default function SearchForm({
+  handleMovieSearch,
+  handleCheck,
+  isShortFilms,
+  localArr,
+  savedMov,
+}) {
+  const { values, handleChange, isValid } = useFormWithValidation({});
+  const [isError, setIsError] = React.useState(false);
+  const errorSelector = isError ? "error " : "error_invisible";
+
+  const handleChangeInput = (evt) => {
+    handleChange(evt);
+    setIsError(false);
+  };
+
+  function handleSubmit(evt) {
+    setIsError(false);
+    if (evt) {
+      evt.preventDefault();
+    }
+    if (!isValid) {
+      setIsError(true);
+    } else if (!savedMov) {
+      handleMovieSearch(values.input, localArr);
+      localStorage.setItem("queryM", values.input);
+    } else if (savedMov) {
+      localStorage.setItem("querySM", values.input);
+      return handleMovieSearch(values.input, localArr);
+    }
+    return;
+  }
+
   return (
     <section className="search">
-      <form action="#" className="search__form">
+      <span className={errorSelector}>Нужно ввести ключевое слово</span>
+      <form className="search__form" noValidate onSubmit={handleSubmit}>
         <div className="search__container">
           <input
             className="search__input"
             type="text"
             name="input"
             placeholder="Фильм"
-            required
+            onChange={handleChangeInput}
           />
           <button
             className="search__button"
             type="submit"
             value="Найти фильм"
             id="search__button"
-            onClick={handleSearchClick}
           />
         </div>
-        <FilterCheckbox />
+        <FilterCheckbox handleCheck={handleCheck} isShortFilms={isShortFilms} />
       </form>
     </section>
   );
 }
-
-SearchForm.propTypes = {
-  handleSearchClick: PropTypes.func,
-};

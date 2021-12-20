@@ -1,7 +1,22 @@
+/* eslint-disable react/prop-types */
 import React from "react";
+import { useFormWithValidation } from "../../hooks/useForm";
 import AuthForm from "../AuthForm/AuthForm";
 
-export default function Login() {
+export default function Login({
+  onSubmit,
+  isLoading,
+  serverErrMsg,
+  customErr,
+  resetServerError
+}) {
+  const { values, handleChange, errors, isValid } = useFormWithValidation();
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    onSubmit(values);
+  };
+
   return (
     <AuthForm
       title="Рады видеть!"
@@ -10,6 +25,15 @@ export default function Login() {
       authQuestion="Ещё не зарегистрированы?"
       authLinkTxt="Регистрация"
       linkPath="/signup"
+      onChangeInput={handleChange}
+      onSubmit={handleSubmit}
+      errors={errors}
+      isValid={isValid}
+      isLoading={isLoading}
+      values={values}
+      serverErrMsg={serverErrMsg}
+      customErr={customErr}
+      resetServerError={resetServerError}
     />
   );
 }

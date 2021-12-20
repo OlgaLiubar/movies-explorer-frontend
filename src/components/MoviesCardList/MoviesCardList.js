@@ -1,25 +1,47 @@
 import React from "react";
-
+import MovieNotFound from "../MovieNotFound/MovieNotFound";
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-const cards = [
-  { saved: false },
-  { saved: true },
-  { saved: true },
-  { saved: false },
-];
+export default function MoviesCardList({
+  cardList,
+  onSaveMovie,
+  isSavedMovie,
+  onDeleteMovie,
+  setMaxNumberOfMovies,
+  maxNumberOfMovies,
+  step,
+  isLoading,
+  notFound,
+  allMovies,
+}) {
+  function handleMoreBtnClick() {
+    return setMaxNumberOfMovies(maxNumberOfMovies + step);
+  }
 
-export default function Movies() {
+  const moviesToRender = cardList.slice(0, maxNumberOfMovies);
+
   return (
     <section className="moviesCardList">
+      {notFound && !isLoading && <MovieNotFound />}
       <ul className="moviesCardList__gallery">
-        {cards.map((i) => (
-          <MoviesCard key={[i]} card={i} />
+        {moviesToRender.map((card) => (
+          <MoviesCard
+            key={card.id || card._id}
+            card={card}
+            onSaveMovie={onSaveMovie}
+            isSavedMovie={isSavedMovie}
+            onDeleteMovie={onDeleteMovie}
+          />
         ))}
       </ul>
-      <button type="button" className="moviesCardList__more-button">
-        Ещё
-      </button>
+      {allMovies && cardList.length > maxNumberOfMovies && (
+        <button
+          className="moviesCardList__more-button"
+          onClick={handleMoreBtnClick}
+        >
+          Еще
+        </button>
+      )}
     </section>
   );
 }

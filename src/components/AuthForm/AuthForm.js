@@ -1,6 +1,7 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import FormButton from "../FormButton/FormButton";
+import FormError from "../FormError/FormError";
 
 export default function AuthForm({
   title,
@@ -9,15 +10,26 @@ export default function AuthForm({
   authQuestion,
   authLinkTxt,
   linkPath,
+  onChangeInput,
+  errors,
+  values,
+  isValid,
+  onSubmit,
+  serverErrMsg,
+  customErr,
+  resetServerError
 }) {
-  const errStyle = {
-    visibility: "hidden",
-  };
+
+  function hideError() {
+    resetServerError()
+  }
   return (
     <section className="auth">
-      <div className="auth__logo"></div>
+      <Link to="/">
+        <div className="auth__logo"></div>
+      </Link>
       <h1 className="auth__title">{`${title}`}</h1>
-      <form action="#" className="auth__form">
+      <form onSubmit={onSubmit} className="auth__form" noValidate>
         <fieldset className="auth__fieldset">
           {signUp && (
             <label className="auth__label">
@@ -28,45 +40,49 @@ export default function AuthForm({
                 maxLength={30}
                 type="text"
                 name="name"
+                onChange={onChangeInput}
+                onFocus={hideError}
                 required
               />
-              <span
-                style={errStyle}
-                className="auth__input-error"
-                id="name-error"
-              >
-                Что-то пошло не так...
+              <span className="auth__input-error" id="name-error">
+                {errors.name || ""}
               </span>
             </label>
           )}
           <label className="auth__label">
             <p className="auth__input-name">E-mail</p>
-            <input className="auth__input" type="email" name="email" required />
-            <span
-              style={errStyle}
-              className="auth__input-error"
-              id="email-error"
-            >
-              Что-то пошло не так...
+            <input
+              className="auth__input"
+              type="email"
+              name="email"
+              required
+              onChange={onChangeInput}
+              onFocus={hideError}
+            />
+            <span className="auth__input-error" id="email-error">
+              {errors.email || ""}
             </span>
           </label>
           <label className="auth__label">
             <p className="auth__input-name">Пароль</p>
             <input
-              className="auth__input"
-              maxLength={8}
+              className={
+                !errors.password ? "auth__input" : "auth__input auth__input_invalid"
+              }
+              minLength={8}
               type="password"
               name="password"
+              onChange={onChangeInput}
               required
+              onFocus={hideError}
             />
             <span className="auth__input-error" id="password-error">
-              Что-то пошло не так...
+              {errors.password || ""}
             </span>
           </label>
         </fieldset>
-        <button type="submit" value="Отправить" className={`auth__submit-btn`}>
-          {btnName}
-        </button>
+        <FormError serverErrMsg={serverErrMsg} customErr={customErr} />
+        <FormButton btnName={btnName} isValid={isValid} values={values} />
       </form>
       <p className="auth__signed-up">
         {authQuestion}
@@ -77,12 +93,3 @@ export default function AuthForm({
     </section>
   );
 }
-
-AuthForm.propTypes = {
-  title: PropTypes.string.isRequired,
-  signUp: PropTypes.bool.isRequired,
-  btnName: PropTypes.string.isRequired,
-  authQuestion: PropTypes.string.isRequired,
-  authLinkTxt: PropTypes.string.isRequired,
-  linkPath: PropTypes.string.isRequired,
-};
